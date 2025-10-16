@@ -1,7 +1,7 @@
 // ==========================================
 // ABSTRACT CLASS: KENDARAAN
 // ==========================================
-
+// kelompok 25 falah agung aji sabrina
 class Kendaraan {
     constructor(merk) {
         this.merk = merk;
