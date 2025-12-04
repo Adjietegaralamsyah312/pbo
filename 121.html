@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form GUI Sederhana</title>
+</head>
+<body>
+    <h1>Masukkan Nama Anda</h1>
+
+    <input type="text" id="nameInput" placeholder="Nama Anda">
+    <button onclick="tampilkanNama()">Submit</button>
+
+    <h2 id="output"></h2>
+
+    <script>
+        function tampilkanNama() {
+            const nama = document.getElementById("nameInput").value;
+            document.getElementById("output").innerText = "Halo, " + nama + "!";
+        }
+    </script>
+</body>
+</html>
