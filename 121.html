@@ -1,23 +1,39 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form GUI Sederhana</title>
-</head>
-<body>
-    <h1>Masukkan Nama Anda</h1>
+import { useState } from "react";
 
-    <input type="text" id="nameInput" placeholder="Nama Anda">
-    <button onclick="tampilkanNama()">Submit</button>
+function App() {
+  const [text, setText] = useState("Halo, Mahasiswa!");
+  const [nama, setNama] = useState("");
+  const [output, setOutput] = useState("");
 
-    <h2 id="output"></h2>
+  const ubahTeks = () => {
+    setText("Teks telah berubah!");
+  };
 
-    <script>
-        function tampilkanNama() {
-            const nama = document.getElementById("nameInput").value;
-            document.getElementById("output").innerText = "Halo, " + nama + "!";
-        }
-    </script>
-</body>
-</html>
+  const tampilkanNama = () => {
+    setOutput("Halo, " + nama + "!");
+  };
+
+  return (
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      {/* Fitur 1: Ubah Teks */}
+      <h1>{text}</h1>
+      <button onClick={ubahTeks}>Klik Saya</button>
+
+      <hr />
+
+      {/* Fitur 2: Form Input Nama */}
+      <h2>Masukkan Nama Anda</h2>
+      <input
+        type="text"
+        placeholder="Nama Anda"
+        value={nama}
+        onChange={(e) => setNama(e.target.value)}
+      />
+      <button onClick={tampilkanNama}>Submit</button>
+
+      <h2>{output}</h2>
+    </div>
+  );
+}
+
+export default App;
