@@ -6,14 +6,28 @@
     <title>GUI Sederhana</title>
 </head>
 <body>
+
     <h1 id="title">Halo, Mahasiswa!</h1>
     <button onclick="ubahTeks()">Klik Saya</button>
+
+    <hr>
+
+    <h1>Masukkan Nama Anda</h1>
+    <input type="text" id="nameInput" placeholder="Nama Anda">
+    <button onclick="tampilkanNama()">Submit</button>
+
+    <h2 id="output"></h2>
 
     <script>
         function ubahTeks() {
             document.getElementById("title").innerText = "Teks telah berubah!";
         }
+
+        function tampilkanNama() {
+            const nama = document.getElementById("nameInput").value;
+            document.getElementById("output").innerText = "Halo, " + nama + "!";
+        }
     </script>
+
 </body>
 </html>
-
