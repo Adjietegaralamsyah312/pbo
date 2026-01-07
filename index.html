@@ -2863,4 +2863,369 @@
     window.removeFromCart = removeFromCart;
     window.updateQuantity = updateQuantity;
 </script>
-Ini jadi nya apa
+
+<style>
+    /* Perbaikan untuk mobile spacing */
+    @media (max-width: 768px) {
+        /* Tambahkan margin bottom untuk hero section */
+        .hero {
+            padding-bottom: 80px !important;
+        }
+        
+        /* Atur posisi cart button lebih tinggi */
+        .cart-floating {
+            bottom: 80px !important;
+            right: 20px;
+        }
+        
+        /* Tambahkan spacing untuk section pertama setelah hero */
+        #about {
+            padding-top: 40px !important;
+        }
+        
+        /* Perbaikan untuk tombol reservasi di hero */
+        .hero-btns {
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 30px;
+        }
+        
+        .hero-btns .btn {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .cart-floating {
+            bottom: 70px !important;
+            right: 15px;
+        }
+        
+        .cart-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+        }
+        
+        .cart-count {
+            width: 22px;
+            height: 22px;
+            font-size: 0.7rem;
+        }
+        
+        .hero {
+            min-height: 600px;
+        }
+        
+        .hero-content {
+            padding: 0 15px;
+        }
+        
+        .hero h1 {
+            font-size: 2.2rem;
+        }
+        
+        .hero p {
+            font-size: 1rem;
+        }
+    }
+    
+    /* Perbaikan khusus untuk iPhone dengan notch/safe area */
+    @supports (padding: max(0px)) {
+        .cart-floating {
+            bottom: max(80px, env(safe-area-inset-bottom) + 80px) !important;
+            right: max(20px, env(safe-area-inset-right) + 20px);
+        }
+    }
+    
+    /* Tambahkan efek visual untuk cart button */
+    .cart-btn {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(193, 154, 83, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(193, 154, 83, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(193, 154, 83, 0);
+        }
+    }
+    
+    /* Loading state untuk cart */
+    .cart-btn.loading {
+        animation: none;
+        opacity: 0.8;
+    }
+    
+    .cart-btn.loading i {
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Badge untuk notifikasi */
+    .cart-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: linear-gradient(135deg, #ff6b6b, #ff4757);
+        color: white;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        font-size: 0.7rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: bounce 0.5s;
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-10px);}
+        60% {transform: translateY(-5px);}
+    }
+</style>
+
+<script>
+    // Perbaikan untuk mobile experience
+    function initMobileOptimizations() {
+        // Deteksi jika user menggunakan mobile
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+        
+        if (isMobile) {
+            // Smooth scroll untuk mobile
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
+                        
+                        // Close mobile menu jika terbuka
+                        const navLinks = document.getElementById('navLinks');
+                        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                        if (navLinks.classList.contains('active')) {
+                            navLinks.classList.remove('active');
+                            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                            document.body.style.overflow = '';
+                        }
+                        
+                        // Smooth scroll dengan offset untuk header fixed
+                        const headerHeight = document.getElementById('header').offsetHeight;
+                        const targetPosition = targetElement.offsetTop - headerHeight;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Prevent zoom pada input
+            document.querySelectorAll('input, select, textarea').forEach(input => {
+                input.addEventListener('focus', () => {
+                    setTimeout(() => {
+                        document.body.style.zoom = "100%";
+                    }, 100);
+                });
+            });
+            
+            // Optimasi touch events
+            let lastTap = 0;
+            document.addEventListener('touchend', function(event) {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTap;
+                
+                if (tapLength < 500 && tapLength > 0) {
+                    event.preventDefault();
+                    // Handle double tap jika perlu
+                }
+                lastTap = currentTime;
+            });
+            
+            // Close modal dengan swipe down
+            const paymentModal = document.getElementById('paymentModal');
+            if (paymentModal) {
+                let startY = 0;
+                let endY = 0;
+                
+                paymentModal.addEventListener('touchstart', function(e) {
+                    startY = e.touches[0].clientY;
+                });
+                
+                paymentModal.addEventListener('touchmove', function(e) {
+                    endY = e.touches[0].clientY;
+                });
+                
+                paymentModal.addEventListener('touchend', function() {
+                    const swipeDistance = endY - startY;
+                    
+                    if (swipeDistance > 100) { // Swipe down lebih dari 100px
+                        paymentModal.style.display = 'none';
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+        }
+        
+        // Handle orientation change
+        window.addEventListener('orientationchange', function() {
+            // Refresh cart position
+            setTimeout(() => {
+                const cart = document.querySelector('.cart-floating');
+                if (cart) {
+                    const isPortrait = window.innerHeight > window.innerWidth;
+                    if (isPortrait) {
+                        cart.style.bottom = '80px';
+                    } else {
+                        cart.style.bottom = '30px';
+                    }
+                }
+            }, 300);
+        });
+        
+        // Prevent cart button from overlapping with iOS home indicator
+        function adjustForSafeArea() {
+            const cart = document.querySelector('.cart-floating');
+            if (!cart) return;
+            
+            // Deteksi jika ada safe area (iPhone X+)
+            const safeAreaBottom = getComputedStyle(document.documentElement)
+                .getPropertyValue('--sat') || '0px';
+            
+            if (parseInt(safeAreaBottom) > 0) {
+                cart.style.bottom = `calc(80px + ${safeAreaBottom})`;
+            }
+        }
+        
+        // Panggil setelah DOM siap
+        setTimeout(adjustForSafeArea, 100);
+        window.addEventListener('resize', adjustForSafeArea);
+    }
+    
+    // Inisialisasi ketika DOM siap
+    document.addEventListener('DOMContentLoaded', function() {
+        initMobileOptimizations();
+        
+        // Tambahkan class safe-area jika diperlukan
+        if ('CSS' in window && CSS.supports('padding-top: env(safe-area-inset-top)')) {
+            document.documentElement.classList.add('safe-area');
+        }
+    });
+    
+    // Update cart position on scroll untuk mobile
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', function() {
+        if (window.innerWidth <= 768) {
+            const cart = document.querySelector('.cart-floating');
+            if (!cart) return;
+            
+            const st = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (st > lastScrollTop) {
+                // Scroll down - sembunyikan cart button sedikit
+                cart.style.transform = 'translateY(70px)';
+                cart.style.transition = 'transform 0.3s ease';
+            } else {
+                // Scroll up - tampilkan cart button
+                cart.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollTop = st <= 0 ? 0 : st;
+            
+            // Reset transform ketika scroll mencapai atas
+            if (st === 0) {
+                cart.style.transform = 'translateY(0)';
+            }
+        }
+    }, false);
+</script>
+
+<!-- Tambahkan CSS untuk safe area iOS -->
+<style>
+    /* Safe area support untuk iOS */
+    :root {
+        --sat: env(safe-area-inset-top);
+        --sar: env(safe-area-inset-right);
+        --sab: env(safe-area-inset-bottom);
+        --sal: env(safe-area-inset-left);
+    }
+    
+    /* Adjust untuk devices dengan notch */
+    @supports (padding: max(0px)) {
+        .hero,
+        section,
+        footer {
+            padding-left: max(1rem, var(--sal));
+            padding-right: max(1rem, var(--sar));
+        }
+        
+        .hero {
+            padding-top: max(1rem, var(--sat));
+        }
+        
+        footer {
+            padding-bottom: max(2rem, var(--sab));
+        }
+        
+        /* Cart button positioning dengan safe area */
+        .cart-floating {
+            right: max(20px, var(--sar) + 20px);
+        }
+    }
+    
+    /* Fix untuk iOS input zoom */
+    @media screen and (max-width: 768px) {
+        input[type="color"],
+        input[type="date"],
+        input[type="datetime"],
+        input[type="datetime-local"],
+        input[type="email"],
+        input[type="month"],
+        input[type="number"],
+        input[type="password"],
+        input[type="search"],
+        input[type="tel"],
+        input[type="text"],
+        input[type="time"],
+        input[type="url"],
+        input[type="week"],
+        select:focus,
+        textarea {
+            font-size: 16px !important;
+        }
+    }
+    
+    /* Fix untuk iOS sticky hover */
+    @media (hover: hover) {
+        .cart-btn:hover {
+            transform: scale(1.1);
+        }
+    }
+    
+    /* Tambahkan background blur untuk cart button di iOS */
+    @supports (backdrop-filter: blur(10px)) {
+        .cart-btn {
+            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, 
+                rgba(193, 154, 83, 0.9), 
+                rgba(166, 124, 0, 0.9)
+            );
+        }
+    }
+</style>
