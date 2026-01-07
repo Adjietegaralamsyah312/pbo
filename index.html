@@ -1,3 +1,1902 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gourmet Haven - Restoran Fine Dining Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #c19a53;
+            --primary-dark: #a67c00;
+            --secondary-color: #1a1a1a;
+            --accent-color: #8b4513;
+            --light-color: #f9f7f2;
+            --dark-color: #121212;
+            --gray-color: #666666;
+            --light-gray: #e8e8e8;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-heavy: 0 15px 40px rgba(0, 0, 0, 0.15);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--secondary-color);
+            background-color: var(--light-color);
+            overflow-x: hidden;
+            font-weight: 400;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            color: var(--secondary-color);
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: clamp(2.8rem, 5vw, 4.5rem);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-size: clamp(1.8rem, 3vw, 2.4rem);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--gray-color);
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 clamp(1rem, 3vw, 2rem);
+        }
+
+        section {
+            padding: clamp(4rem, 8vw, 6rem) 0;
+            position: relative;
+        }
+
+        .section-title {
+            margin-bottom: clamp(2.5rem, 5vw, 4rem);
+            text-align: center;
+        }
+
+        .section-title p {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            color: var(--gray-color);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            letter-spacing: 0.5px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-dark));
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            left: 0;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-secondary::before {
+            background: var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            color: white;
+        }
+
+        .btn i {
+            font-size: 1.1em;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgba(18, 18, 18, 0.95);
+            padding: clamp(1rem, 2vw, 1.2rem) 0;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        header.scrolled {
+            padding: 0.8rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            z-index: 1001;
+        }
+
+        .logo-icon {
+            font-size: 1.8em;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: clamp(1rem, 2vw, 2rem);
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            bottom: 0;
+            left: 0;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--primary-color);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hero Section dengan Fallback */
+        .hero {
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, #2c3e50, #4a235a),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231a1a2e"/><path d="M0,50 Q25,25 50,50 T100,50" stroke="%23344fa1" stroke-width="2" fill="none"/></svg>');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            color: white;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            margin-bottom: 2.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Image Fallback Styling */
+        .image-fallback {
+            background: linear-gradient(45deg, #f5f5f5, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-color);
+            font-weight: 500;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .menu-item-img, .chef-img, .gallery-item img {
+            background: linear-gradient(45deg, #f8f8f8, #e8e8e8);
+            position: relative;
+        }
+
+        .menu-item-img::after, .chef-img::after {
+            content: '🍽️';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+
+        /* Features Section */
+        .features {
+            background-color: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+            gap: clamp(1.5rem, 3vw, 2.5rem);
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        /* Menu Section */
+        .menu {
+            background-color: var(--light-color);
+        }
+
+        .menu-categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: clamp(2rem, 4vw, 3.5rem);
+        }
+
+        .category-btn {
+            padding: 0.8rem 1.8rem;
+            background-color: white;
+            border: 2px solid var(--light-gray);
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .category-btn.active,
+        .category-btn:hover {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-color: transparent;
+            transform: translateY(-3px);
+        }
+
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+            gap: clamp(1.5rem, 3vw, 2.5rem);
+        }
+
+        .menu-item {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .menu-item-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .menu-item:hover .menu-item-img {
+            transform: scale(1.05);
+        }
+
+        .menu-item-content {
+            padding: clamp(1.2rem, 2vw, 1.8rem);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+        }
+
+        .menu-item-name {
+            font-size: 1.4rem;
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        .menu-item-price {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.3rem;
+            white-space: nowrap;
+            margin-left: 1rem;
+        }
+
+        .menu-item-category {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .menu-item-desc {
+            color: var(--gray-color);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .menu-item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .rating {
+            color: #ffc107;
+            font-size: 0.9rem;
+        }
+
+        /* Chef Section */
+        .chef-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9));
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        .chef-section h2 {
+            color: white;
+        }
+
+        .chef-section h2::after {
+            background: var(--primary-color);
+        }
+
+        .chef-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+            gap: 2rem;
+        }
+
+        .chef-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chef-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-color);
+        }
+
+        .chef-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .chef-info {
+            padding: 1.8rem;
+            text-align: center;
+        }
+
+        .chef-info h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .chef-role {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* Gallery */
+        .gallery {
+            background-color: white;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+            gap: 1.2rem;
+        }
+
+        .gallery-item {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            position: relative;
+            height: 280px;
+            cursor: pointer;
+            background: linear-gradient(45deg, #f8f8f8, #e8e8e8);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        /* Reservation */
+        .reservation {
+            background-color: var(--light-color);
+        }
+
+        .reservation-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(2rem, 4vw, 4rem);
+            align-items: center;
+        }
+
+        .reservation-info h2 {
+            text-align: left;
+        }
+
+        .reservation-info h2::after {
+            left: 0;
+            transform: none;
+        }
+
+        .reservation-details {
+            margin: 2rem 0;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .reservation-form {
+            background: white;
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 0.95rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(193, 154, 83, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: clamp(3rem, 5vw, 5rem) 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+            gap: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-color);
+            bottom: 0;
+            left: 0;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-5px) rotate(5deg);
+        }
+
+        .newsletter-form {
+            margin-top: 1.5rem;
+        }
+
+        .newsletter-form input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .newsletter-form input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 999;
+            box-shadow: var(--shadow);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .reservation-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .reservation-info h2 {
+                text-align: center;
+            }
+            
+            .reservation-info h2::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background-color: var(--dark-color);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+                transition: var(--transition);
+                z-index: 1000;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            
+            .hero-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-btns .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .back-to-top {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu-categories {
+                gap: 0.5rem;
+            }
+            
+            .category-btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.85rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+            
+            .gallery-item {
+                height: 220px;
+            }
+            
+            .chef-img {
+                height: 250px;
+            }
+        }
+
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .text-primary { color: var(--primary-color); }
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-2 { margin-bottom: 2rem; }
+        .mb-3 { margin-bottom: 3rem; }
+        .mt-1 { margin-top: 1rem; }
+        .mt-2 { margin-top: 2rem; }
+        .mt-3 { margin-top: 3rem; }
+        .d-flex { display: flex; }
+        .justify-center { justify-content: center; }
+        .align-center { align-items: center; }
+        .gap-1 { gap: 1rem; }
+
+        /* Fade In Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--shadow-heavy);
+            z-index: 10000;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.error {
+            background-color: #f44336;
+        }
+
+        .toast i {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header id="header">
+        <div class="container nav-container">
+            <a href="#home" class="logo">
+                <i class="fas fa-utensils logo-icon"></i>
+                <span>Gourmet Haven</span>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" class="active">Beranda</a></li>
+                <li><a href="#about">Tentang</a></li>
+                <li><a href="#features">Keunggulan</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#chefs">Chef</a></li>
+                <li><a href="#gallery">Galeri</a></li>
+                <li><a href="#reservation">Reservasi</a></li>
+                <li><a href="#contact">Kontak</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="fade-in">Pengalaman Kuliner Tak Terlupakan</h1>
+                <p class="fade-in">Di Gourmet Haven, kami menyajikan hidangan istimewa yang dibuat dengan bahan-bahan terbaik dan sentuhan kreatif dari chef ternama kami. Setiap hidangan adalah karya seni yang memanjakan lidah Anda.</p>
+                <div class="hero-btns fade-in">
+                    <a href="#menu" class="btn">
+                        <i class="fas fa-book-open"></i>
+                        Lihat Menu Lengkap
+                    </a>
+                    <a href="#reservation" class="btn btn-secondary">
+                        <i class="fas fa-calendar-alt"></i>
+                        Reservasi Sekarang
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Tentang Gourmet Haven</h2>
+                <p>Didirikan pada tahun 2010, kami telah menjadi destinasi kuliner premium dengan reputasi yang tak tertandingi di industri fine dining.</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text fade-in">
+                    <h3>Kisah Kami</h3>
+                    <p>Gourmet Haven lahir dari passion mendalam terhadap seni kuliner. Chef Marco Alessandro, pendiri kami, membawa pengalaman lebih dari 20 tahun dari restoran bintang Michelin di Eropa.</p>
+                    <p>Setiap hidangan diolah dengan bahan-bahan segar pilihan yang dipasok langsung dari petani lokal terpercaya dan importir khusus. Kami mengutamakan kualitas, keberlanjutan, dan rasa autentik.</p>
+                    <p>Restoran kami telah menerima berbagai penghargaan prestisius termasuk "Best Fine Dining Restaurant 2023" dan "Golden Fork Award" selama tiga tahun berturut-turut.</p>
+                    <a href="#reservation" class="btn mt-2">
+                        <i class="fas fa-star"></i>
+                        Rasakan Keunggulan Kami
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Keunggulan Kami</h2>
+                <p>Mengapa Gourmet Haven menjadi pilihan utama para pecinta kuliner</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>Bahan Organik</h3>
+                    <p>Hanya menggunakan bahan organik segar dari petani lokal terpercaya untuk kualitas dan kesehatan terbaik.</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>Chef Berpengalaman</h3>
+                    <p>Dibimbing oleh Chef Marco Alessandro dengan pengalaman 20+ tahun di restoran bintang Michelin Eropa.</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-wine-glass-alt"></i>
+                    </div>
+                    <h3>Wine Collection</h3>
+                    <p>Koleksi wine eksklusif dari berbagai daerah penghasil anggur terbaik di dunia, dipadu dengan makanan.</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Pelayanan Premium</h3>
+                    <p>Staf profesional yang terlatih memberikan pelayanan personal dan perhatian pada setiap detail.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="menu" id="menu">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Menu Spesial</h2>
+                <p>Jelajahi kreasi kuliner terbaik kami yang dibuat dengan passion dan keahlian</p>
+            </div>
+            
+            <div class="menu-categories fade-in">
+                <button class="category-btn active" data-category="all">Semua Menu</button>
+                <button class="category-btn" data-category="appetizer">Hidangan Pembuka</button>
+                <button class="category-btn" data-category="main">Hidangan Utama</button>
+                <button class="category-btn" data-category="dessert">Makanan Penutup</button>
+                <button class="category-btn" data-category="drink">Minuman Eksklusif</button>
+            </div>
+            
+            <div class="menu-items" id="menuItems">
+                <!-- Menu items akan di-generate dengan JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Chef Section -->
+    <section class="chef-section" id="chefs">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Chef Kami</h2>
+                <p>Bertemu dengan tim chef berbakat yang berada di balik setiap kreasi istimewa</p>
+            </div>
+            
+            <div class="chef-grid">
+                <div class="chef-card fade-in">
+                    <div class="chef-img image-fallback">
+                        <div>👨‍🍳 Chef Marco</div>
+                    </div>
+                    <div class="chef-info">
+                        <h3>Marco Alessandro</h3>
+                        <p class="chef-role">HEAD CHEF & OWNER</p>
+                        <p>Lulusan Le Cordon Bleu Paris dengan pengalaman 20+ tahun di restoran bintang Michelin.</p>
+                    </div>
+                </div>
+                
+                <div class="chef-card fade-in">
+                    <div class="chef-img image-fallback">
+                        <div>👩‍🍳 Chef Anna</div>
+                    </div>
+                    <div class="chef-info">
+                        <h3>Anna Takahashi</h3>
+                        <p class="chef-role">PASTRY CHEF</p>
+                        <p>Spesialis pastry dan dessert dengan sentuhan fusion Jepang-Prancis yang unik.</p>
+                    </div>
+                </div>
+                
+                <div class="chef-card fade-in">
+                    <div class="chef-img image-fallback">
+                        <div>👨‍🍳 Chef Roberto</div>
+                    </div>
+                    <div class="chef-info">
+                        <h3>Roberto Silva</h3>
+                        <p class="chef-role">SOUS CHEF</p>
+                        <p>Ahli dalam teknik modern dan molecular gastronomy dengan fokus pada presentasi visual.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery" id="gallery">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Galeri Kami</h2>
+                <p>Rasakan atmosfer dan keindahan setiap hidangan melalui galeri kami</p>
+            </div>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item fade-in">
+                    <div class="image-fallback" style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>🍷 Interior Restoran</div>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4 style="color: white;">Interior Elegan</h4>
+                    </div>
+                </div>
+                
+                <div class="gallery-item fade-in">
+                    <div class="image-fallback" style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>🥩 Hidangan Spesial</div>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4 style="color: white;">Hidangan Spesial</h4>
+                    </div>
+                </div>
+                
+                <div class="gallery-item fade-in">
+                    <div class="image-fallback" style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>🍕 Pizza Gourmet</div>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4 style="color: white;">Pizza Gourmet</h4>
+                    </div>
+                </div>
+                
+                <div class="gallery-item fade-in">
+                    <div class="image-fallback" style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <div>🍰 Dessert Eksklusif</div>
+                    </div>
+                    <div class="gallery-overlay">
+                        <h4 style="color: white;">Dessert Eksklusif</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation Section -->
+    <section class="reservation" id="reservation">
+        <div class="container">
+            <div class="reservation-container">
+                <div class="reservation-info fade-in">
+                    <h2>Reservasi Meja</h2>
+                    <p>Pesan meja Anda sekarang untuk pengalaman kuliner tak terlupakan. Isi formulir di samping dan kami akan mengonfirmasi reservasi Anda dalam waktu 24 jam.</p>
+                    
+                    <div class="reservation-details">
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <h4>Jam Operasional</h4>
+                                <p>Setiap Hari: 18:00 - 23:00<br>Minggu: 12:00 - 23:00</p>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4>Telepon</h4>
+                                <p>(021) 555-7890<br>WhatsApp: 0812-3456-7890</p>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h4>Lokasi</h4>
+                                <p>Jl. Gourmet No. 123, Jakarta Selatan<br>Parkir valet tersedia</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reservation-form fade-in">
+                    <form id="reservationForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Nama Lengkap *</label>
+                                <input type="text" id="name" required placeholder="Masukkan nama lengkap">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Nomor Telepon *</label>
+                                <input type="tel" id="phone" required placeholder="Contoh: 081234567890">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" id="email" required placeholder="nama@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="guests">Jumlah Tamu *</label>
+                                <select id="guests" required>
+                                    <option value="">Pilih jumlah tamu</option>
+                                    <option value="1">1 Orang</option>
+                                    <option value="2">2 Orang</option>
+                                    <option value="3-4">3-4 Orang</option>
+                                    <option value="5-6">5-6 Orang</option>
+                                    <option value="7+">7+ Orang (Group)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date">Tanggal Reservasi *</label>
+                                <input type="date" id="date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="time">Waktu Reservasi *</label>
+                                <select id="time" required>
+                                    <option value="">Pilih waktu</option>
+                                    <option value="18:00">18:00</option>
+                                    <option value="18:30">18:30</option>
+                                    <option value="19:00">19:00</option>
+                                    <option value="19:30">19:30</option>
+                                    <option value="20:00">20:00</option>
+                                    <option value="20:30">20:30</option>
+                                    <option value="21:00">21:00</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="occasion">Kesempatan Khusus</label>
+                            <select id="occasion">
+                                <option value="">Pilih kesempatan (opsional)</option>
+                                <option value="anniversary">Anniversary</option>
+                                <option value="birthday">Ulang Tahun</option>
+                                <option value="business">Makan Bisnis</option>
+                                <option value="date">Kencan</option>
+                                <option value="family">Keluarga</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Pesan Tambahan</label>
+                            <textarea id="message" placeholder="Permintaan khusus, alergi makanan, atau perayaan khusus..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn" id="submitBtn" style="width: 100%;">
+                            <i class="fas fa-paper-plane"></i>
+                            Kirim Reservasi
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Gourmet Haven</h3>
+                    <p>Restoran fine dining dengan sentuhan modern yang menawarkan pengalaman kuliner tak terlupakan dengan bahan-bahan terbaik dan pelayanan premium.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="TripAdvisor"><i class="fab fa-tripadvisor"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Kontak Kami</h3>
+                    <ul class="footer-links">
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Jl. Gourmet No. 123, Jakarta Selatan
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tel:+62215557890">
+                                <i class="fas fa-phone"></i>
+                                (021) 555-7890
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto:info@gourmethaven.com">
+                                <i class="fas fa-envelope"></i>
+                                info@gourmethaven.com
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-clock"></i>
+                                Buka setiap hari 18:00 - 23:00
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Link Cepat</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home"><i class="fas fa-chevron-right"></i> Beranda</a></li>
+                        <li><a href="#about"><i class="fas fa-chevron-right"></i> Tentang Kami</a></li>
+                        <li><a href="#menu"><i class="fas fa-chevron-right"></i> Menu</a></li>
+                        <li><a href="#chefs"><i class="fas fa-chevron-right"></i> Chef Kami</a></li>
+                        <li><a href="#reservation"><i class="fas fa-chevron-right"></i> Reservasi</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p>Berlangganan newsletter kami untuk mendapatkan penawaran khusus dan informasi menu terbaru.</p>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <input type="email" placeholder="Email Anda" required>
+                        <button type="submit" class="btn" style="width: 100%;">
+                            <i class="fas fa-paper-plane"></i>
+                            Berlangganan
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Gourmet Haven. Hak Cipta Dilindungi. | Website by <span class="text-primary">Tim Gourmet</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#home" class="back-to-top" id="backToTop" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Reservasi berhasil dikirim!</span>
+    </div>
+
+    <script>
+        // Data menu makanan yang lebih lengkap dengan gambar placeholder yang valid
+        const menuData = [
+            {
+                id: 1,
+                name: "Lobster Thermidor",
+                description: "Lobster segar dengan saus krim, keju gruyère, dan rempah-rempah pilihan. Disajikan dengan puree kentang truffle.",
+                price: 450000,
+                category: "main",
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80"
+            },
+            {
+                id: 2,
+                name: "Tuna Tartare Avocado",
+                description: "Tuna segar sashimi grade dengan alpukat, wijen hitam, dan saus ponzu citrus. Disajikan dengan keripik wonton.",
+                price: 165000,
+                category: "appetizer",
+                rating: 4,
+                image: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80"
+            },
+            {
+                id: 3,
+                name: "Wagyu Beef Ribeye",
+                description: "Steak daging wagyu A5 level medium rare dengan kentang truffle, asparagus, dan red wine reduction.",
+                price: 650000,
+                category: "main",
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1600891964092-4316c288032e?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80"
+            },
+            {
+                id: 4,
+                name: "Tiramisu Classico",
+                description: "Tiramisu klasik dengan mascarpone buatan sendiri, kopi espresso arabica, dan bubuk cokelat Valrhona.",
+                price: 95000,
+                category: "dessert",
+                rating: 4,
+                image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80"
+            },
+            {
+                id: 5,
+                name: "Truffle Mushroom Risotto",
+                description: "Risotto al dente dengan jamur truffle hitam, keju parmesan reggiano, dan kaldu jamur homemade.",
+                price: 250000,
+                category: "main",
+                rating: 4,
+                image: "https://images.unsplash.com/photo-1476124369491-e7addf5db371?ixlib=rb-4.0.3&auto=format&fit=crop&w=685&q=80"
+            },
+            {
+                id: 6,
+                name: "Pan-Seared Foie Gras",
+                description: "Foie gras panggang dengan roti brioche, chutney buah ara, dan reduksi balsamic.",
+                price: 225000,
+                category: "appetizer",
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80"
+            },
+            {
+                id: 7,
+                name: "Chocolate Lava Cake",
+                description: "Kue cokelat dengan lelehan cokelat Valrhona 70% di dalamnya, disajikan dengan es krim vanila Madagascar.",
+                price: 85000,
+                category: "dessert",
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1624353365286-3f8d62dadadf?ixlib=rb-4.0.3&auto=format&fit=crop&w=686&q=80"
+            },
+            {
+                id: 8,
+                name: "Signature Garden Cocktail",
+                description: "Koktail spesial dengan gin botanicals, elderflower, lemon verbena, dan buah segar musiman.",
+                price: 145000,
+                category: "drink",
+                rating: 4,
+                image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80"
+            },
+            {
+                id: 9,
+                name: "Seafood Platter",
+                description: "Beragam seafood segar termasuk kerang, udang, scallop, dan cumi dengan saus lemon butter.",
+                price: 380000,
+                category: "main",
+                rating: 4,
+                image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
+            },
+            {
+                id: 10,
+                name: "Burrata Caprese",
+                description: "Burrata Italia segar dengan tomat heirloom, basil pesto, dan balsamic glaze.",
+                price: 135000,
+                category: "appetizer",
+                rating: 5,
+                image: "https://images.unsplash.com/photo-1598214886806-c87b84b7078b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1450&q=80"
+            }
+        ];
+
+        // DOM Elements
+        const menuItemsContainer = document.getElementById('menuItems');
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        const header = document.getElementById('header');
+        const reservationForm = document.getElementById('reservationForm');
+        const newsletterForm = document.getElementById('newsletterForm');
+        const backToTop = document.getElementById('backToTop');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const submitBtn = document.getElementById('submitBtn');
+        const navLinksAll = document.querySelectorAll('.nav-links a');
+
+        // Initialize menu items
+        function renderMenuItems(category = 'all') {
+            menuItemsContainer.innerHTML = '';
+            
+            const filteredMenu = category === 'all' 
+                ? menuData 
+                : menuData.filter(item => item.category === category);
+            
+            filteredMenu.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item fade-in';
+                menuItem.setAttribute('data-category', item.category);
+                
+                // Generate star rating
+                let stars = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= item.rating) {
+                        stars += '<i class="fas fa-star"></i>';
+                    } else {
+                        stars += '<i class="far fa-star"></i>';
+                    }
+                }
+                
+                // Cek apakah gambar bisa dimuat
+                const img = new Image();
+                img.src = item.image;
+                
+                menuItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="menu-item-img" loading="lazy" onerror="this.onerror=null; this.classList.add('image-fallback'); this.parentElement.innerHTML='<div style=\"height:220px; display:flex; align-items:center; justify-content:center; background:linear-gradient(45deg,#f8f8f8,#e8e8e8); color:#666; font-weight:500;\">${item.name}</div>';">
+                    <div class="menu-item-content">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-name">${item.name}</h3>
+                            <span class="menu-item-price">Rp ${item.price.toLocaleString('id-ID')}</span>
+                        </div>
+                        <span class="menu-item-category">${getCategoryName(item.category)}</span>
+                        <p class="menu-item-desc">${item.description}</p>
+                        <div class="menu-item-footer">
+                            <div class="rating">${stars}</div>
+                            <button class="btn" data-id="${item.id}" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                                <i class="fas fa-shopping-cart"></i> Pesan
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                menuItemsContainer.appendChild(menuItem);
+            });
+            
+            // Add event listeners to order buttons
+            setTimeout(() => {
+                document.querySelectorAll('.menu-item-footer .btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const itemId = this.getAttribute('data-id');
+                        const item = menuData.find(i => i.id == itemId);
+                        showToast(`"${item.name}" telah ditambahkan ke pesanan Anda!`);
+                    });
+                });
+            }, 100);
+            
+            // Trigger fade-in animation for new items
+            observeFadeElements();
+        }
+
+        // Get category name in Indonesian
+        function getCategoryName(category) {
+            const categories = {
+                'appetizer': 'Hidangan Pembuka',
+                'main': 'Hidangan Utama',
+                'dessert': 'Makanan Penutup',
+                'drink': 'Minuman'
+            };
+            return categories[category] || category;
+        }
+
+        // Category filtering
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Filter menu items
+                const category = button.getAttribute('data-category');
+                renderMenuItems(category);
+            });
+        });
+
+        // Mobile menu toggle
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+            
+            // Prevent body scroll when menu is open
+            document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+        });
+
+        // Close mobile menu when clicking on a link
+        navLinksAll.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                document.body.style.overflow = '';
+                
+                // Update active nav link
+                navLinksAll.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            // Show/hide back to top button
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+            
+            // Update active nav link based on scroll position
+            updateActiveNavLink();
+        });
+
+        // Update active nav link based on scroll position
+        function updateActiveNavLink() {
+            const sections = document.querySelectorAll('section');
+            const scrollPos = window.scrollY + 100;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    navLinksAll.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }
+
+        // Form submission with validation
+        reservationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const guests = document.getElementById('guests').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const occasion = document.getElementById('occasion').value;
+            const message = document.getElementById('message').value.trim();
+            
+            // Simple validation
+            if (!name || !phone || !email || !guests || !date || !time) {
+                showToast('Harap isi semua field yang wajib diisi!', 'error');
+                return;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showToast('Format email tidak valid!', 'error');
+                return;
+            }
+            
+            // Phone validation (simple)
+            const phoneRegex = /^[0-9+\-\s]{10,15}$/;
+            if (!phoneRegex.test(phone)) {
+                showToast('Format nomor telepon tidak valid!', 'error');
+                return;
+            }
+            
+            // Date validation (not in the past)
+            const selectedDate = new Date(date);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            if (selectedDate < today) {
+                showToast('Tanggal tidak boleh di masa lalu!', 'error');
+                return;
+            }
+            
+            // Show loading state
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<div class="loading"></div> Memproses...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // In a real app, you would send this data to a server
+            const formattedDate = new Date(date).toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            showToast(`Terima kasih ${name}! Reservasi Anda untuk ${guests} orang pada ${formattedDate} pukul ${time} telah diterima. Kami akan mengonfirmasi dalam waktu 24 jam.`);
+            
+            // Reset form
+            reservationForm.reset();
+            
+            // Reset button
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            
+            // Set minimum date to today
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('date').min = todayStr;
+        });
+
+        // Newsletter form submission
+        newsletterForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const emailInput = newsletterForm.querySelector('input[type="email"]');
+            const email = emailInput.value.trim();
+            
+            if (!email) {
+                showToast('Harap masukkan email Anda!', 'error');
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showToast('Format email tidak valid!', 'error');
+                return;
+            }
+            
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            showToast('Terima kasih! Anda telah berhasil berlangganan newsletter kami.');
+            newsletterForm.reset();
+        });
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            toastMessage.textContent = message;
+            toast.className = 'toast';
+            toast.classList.add(type === 'error' ? 'error' : 'success');
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // Fade-in animation on scroll
+        function observeFadeElements() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            fadeElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // Also observe newly created menu items
+            document.querySelectorAll('.menu-item.fade-in').forEach(item => {
+                observer.observe(item);
+            });
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Back to top functionality
+        backToTop.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Render initial menu
+            renderMenuItems();
+            
+            // Initialize fade-in observer
+            observeFadeElements();
+            
+            // Set header initial state
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            }
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').min = today;
+            
+            // Set default date to tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('date').valueAsDate = tomorrow;
+            
+            // Initialize active nav link
+            updateActiveNavLink();
+        });
+
+        // Image error handling
+        window.addEventListener('error', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.target.style.display = 'none';
+                const fallback = document.createElement('div');
+                fallback.className = 'image-fallback';
+                fallback.innerHTML = '<div>🍽️ Gambar Tidak Tersedia</div>';
+                e.target.parentNode.insertBefore(fallback, e.target);
+                e.target.remove();
+            }
+        }, true);
+    </script>
+</body>
+    </html>
 <!-- Tambahkan kode ini di BAGIAN PALING AKHIR sebelum </body> -->
 <!-- Modal Pembayaran -->
 <div class="payment-modal" id="paymentModal">
