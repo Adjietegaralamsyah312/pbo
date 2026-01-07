@@ -435,11 +435,14 @@
         <i class="fas fa-chevron-up"></i>
     </a>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toastMessage">Reservasi berhasil dikirim!</span>
-    </div>
+    <!-- Modifikasi toast di index.html -->
+<div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">Reservasi berhasil dikirim!</span>
+    <button class="toast-close" onclick="hideToast()" style="background: none; border: none; color: white; font-size: 1.2rem; margin-left: 10px; cursor: pointer;">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
 
     <!-- Modal Pembayaran -->
     <div class="payment-modal" id="paymentModal">
