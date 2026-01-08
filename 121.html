@@ -1,39 +1,175 @@
-import { useState } from "react";
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Website Makanan</title>
 
-function App() {
-  const [text, setText] = useState("Halo, Mahasiswa!");
-  const [nama, setNama] = useState("");
-  const [output, setOutput] = useState("");
-
-  const ubahTeks = () => {
-    setText("Teks telah berubah!");
-  };
-
-  const tampilkanNama = () => {
-    setOutput("Halo, " + nama + "!");
-  };
-
-  return (
-    <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      {/* Fitur 1: Ubah Teks */}
-      <h1>{text}</h1>
-      <button onClick={ubahTeks}>Klik Saya</button>
-
-      <hr />
-
-      {/* Fitur 2: Form Input Nama */}
-      <h2>Masukkan Nama Anda</h2>
-      <input
-        type="text"
-        placeholder="Nama Anda"
-        value={nama}
-        onChange={(e) => setNama(e.target.value)}
-      />
-      <button onClick={tampilkanNama}>Submit</button>
-
-      <h2>{output}</h2>
-    </div>
-  );
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-export default App;
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ff9acb, #8ec5fc);
+}
+
+/* ===== LOGIN ===== */
+.login-container {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-box {
+  background: white;
+  padding: 25px;
+  width: 300px;
+  border-radius: 12px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.login-box h2 {
+  margin-bottom: 20px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #ff7eb3, #6fa8ff);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 6px;
+  background: #f0f0f0;
+  cursor: pointer;
+}
+
+/* ===== WEBSITE ===== */
+#website {
+  display: none;
+  padding: 30px;
+}
+
+nav {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.logout-btn {
+  background: #ff5e5e;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="login-container" id="loginPage">
+  <div class="login-box">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button class="login-btn" onclick="login()">Login</button>
+    <button class="cancel-btn" onclick="resetForm()">Cancel</button>
+  </div>
+</div>
+
+<!-- WEBSITE -->
+<div id="website">
+  <nav>
+    <strong>🍽️ Gourmet Haven</strong>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </nav>
+
+  <div class="card">
+    <h3>Menu Spesial</h3>
+    <p>Nasi Goreng Premium</p>
+    <p>Ayam Bakar Madu</p>
+    <p>Es Teh Lemon</p>
+  </div>
+
+  <div class="card">
+    <h3>Tentang Kami</h3>
+    <p>Website makanan profesional dengan cita rasa terbaik.</p>
+  </div>
+</div>
+
+<script>
+function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+
+  if (user === "" || pass === "") {
+    alert("Username dan Password wajib diisi!");
+    return;
+  }
+
+  if (user === "admin" && pass === "1234") {
+    localStorage.setItem("login", "true");
+    showWebsite();
+  } else {
+    alert("Username atau Password salah!");
+  }
+}
+
+function resetForm() {
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+}
+
+function logout() {
+  localStorage.removeItem("login");
+  location.reload();
+}
+
+function showWebsite() {
+  document.getElementById("loginPage").style.display = "none";
+  document.getElementById("website").style.display = "block";
+}
+
+// Auto login
+if (localStorage.getItem("login") === "true") {
+  showWebsite();
+}
+</script>
+
+</body>
+</html>
