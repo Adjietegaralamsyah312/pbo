@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .form-container,
+        .welcome-container {
+            padding: 40px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            font-size: 15px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #6a11cb;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        #login-btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+        }
+
+        #cancel-btn {
+            margin-top: 10px;
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        #login-btn:hover {
+            box-shadow: 0 5px 15px rgba(106,17,203,0.4);
+        }
+
+        #cancel-btn:hover {
+            background: #d6d6d6;
+        }
+
+        .logout-btn {
+            background: linear-gradient(to right, #f44336, #e91e63);
+            color: white;
+            margin-top: 20px;
+        }
+
+        .logout-btn:hover {
+            box-shadow: 0 5px 15px rgba(244,67,54,0.4);
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .welcome-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .welcome-message {
+            font-size: 22px;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        #display-name {
+            color: #000;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- LOGIN FORM -->
+    <div id="login-form" class="form-container">
+        <h2>Login</h2>
+
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Username">
+        </div>
+
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Password">
+        </div>
+
+        <button id="login-btn">Login</button>
+        <button id="cancel-btn">Cancel</button>
+
+        <div id="login-message" class="message"></div>
+    </div>
+
+    <!-- WELCOME PAGE -->
+    <div id="welcome-page" class="welcome-container hidden">
+        <div class="welcome-icon">👋</div>
+        <h2>Login Berhasil</h2>
+
+        <div class="welcome-message">
+            Halo <span id="display-name">Admin</span>, selamat datang di sistem!
+        </div>
+
+        <button id="logout-btn" class="logout-btn">Logout</button>
+    </div>
+
+</div>
+
+<script>
+    // AKUN LOGIN
+    const validCredentials = {
+        username: "admin",
+        password: "adjie312"
+    };
+
+    // ELEMENT
+    const loginForm = document.getElementById("login-form");
+    const welcomePage = document.getElementById("welcome-page");
+    const loginBtn = document.getElementById("login-btn");
+    const cancelBtn = document.getElementById("cancel-btn");
+    const logoutBtn = document.getElementById("logout-btn");
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+    const loginMessage = document.getElementById("login-message");
+    const displayName = document.getElementById("display-name");
+
+    function showMessage(text, type) {
+        loginMessage.textContent = text;
+        loginMessage.className = `message ${type}`;
+        loginMessage.style.display = "block";
+    }
+
+    function handleLogin() {
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+
+        if (!username || !password) {
+            showMessage("Username dan password wajib diisi!", "error");
+            return;
+        }
+
+        if (username === validCredentials.username && password === validCredentials.password) {
+            showMessage("Login berhasil!", "success");
+
+            setTimeout(() => {
+                loginMessage.style.display = "none";
+                loginForm.classList.add("hidden");
+                welcomePage.classList.remove("hidden");
+                displayName.textContent = username;
+            }, 800);
+
+        } else {
+            showMessage("Username atau password salah!", "error");
+        }
+    }
+
+    function handleCancel() {
+        usernameInput.value = "";
+        passwordInput.value = "";
+        loginMessage.style.display = "none";
+    }
+
+    function handleLogout() {
+        welcomePage.classList.add("hidden");
+        loginForm.classList.remove("hidden");
+        handleCancel();
+    }
+
+    loginBtn.addEventListener("click", handleLogin);
+    cancelBtn.addEventListener("click", handleCancel);
+    logoutBtn.addEventListener("click", handleLogout);
+
+    passwordInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+            handleLogin();
+        }
+    });
+</script>
+
+</body>
+</html>
