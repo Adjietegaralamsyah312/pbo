@@ -1,148 +1,142 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistem Login PBO</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<style>
+:root {
+    --primary: #6a11cb;
+    --secondary: #2575fc;
+    --danger: #f44336;
+    --success: #2ecc71;
+    --glass: rgba(255,255,255,0.25);
+}
 
-        body {
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
 
-        .container {
-            width: 100%;
-            max-width: 420px;
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
 
-        .form-container,
-        .welcome-container {
-            padding: 40px;
-            text-align: center;
-        }
+.container {
+    width: 420px;
+    backdrop-filter: blur(12px);
+    background: var(--glass);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0,0,0,.25);
+    overflow: hidden;
+    animation: fadeIn 0.8s ease;
+}
 
-        h2 {
-            margin-bottom: 25px;
-            color: #333;
-        }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
 
-        .input-group {
-            margin-bottom: 20px;
-        }
+.section {
+    padding: 40px;
+    text-align: center;
+}
 
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 2px solid #ddd;
-            font-size: 15px;
-        }
+h2 {
+    margin-bottom: 25px;
+    color: #fff;
+}
 
-        .input-group input:focus {
-            outline: none;
-            border-color: #6a11cb;
-        }
+.input-group {
+    margin-bottom: 18px;
+}
 
-        button {
-            width: 100%;
-            padding: 13px;
-            border-radius: 8px;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-        }
+input {
+    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+}
 
-        #login-btn {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
-        }
+button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: .3s;
+}
 
-        #cancel-btn {
-            margin-top: 10px;
-            background: #e0e0e0;
-            color: #333;
-        }
+.btn-primary {
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    color: #fff;
+}
 
-        #login-btn:hover {
-            box-shadow: 0 5px 15px rgba(106,17,203,0.4);
-        }
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,.3);
+}
 
-        #cancel-btn:hover {
-            background: #d6d6d6;
-        }
+.btn-secondary {
+    margin-top: 10px;
+    background: #eee;
+}
 
-        .logout-btn {
-            background: linear-gradient(to right, #f44336, #e91e63);
-            color: white;
-            margin-top: 20px;
-        }
+.btn-danger {
+    background: linear-gradient(to right, var(--danger), #e91e63);
+    color: white;
+    margin-top: 25px;
+}
 
-        .logout-btn:hover {
-            box-shadow: 0 5px 15px rgba(244,67,54,0.4);
-        }
+.message {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    display: none;
+    font-weight: 500;
+}
 
-        .message {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            display: none;
-            font-weight: 500;
-        }
+.success {
+    background: rgba(46,204,113,.2);
+    color: #fff;
+}
 
-        .success {
-            background: #d4edda;
-            color: #155724;
-        }
+.error {
+    background: rgba(244,67,54,.25);
+    color: #fff;
+}
 
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-        }
+.hidden {
+    display: none;
+}
 
-        .hidden {
-            display: none;
-        }
+.welcome-icon {
+    font-size: 60px;
+}
 
-        .welcome-icon {
-            font-size: 60px;
-            margin-bottom: 15px;
-        }
-
-        .welcome-message {
-            font-size: 22px;
-            margin-top: 10px;
-            color: #333;
-        }
-
-        #display-name {
-            color: #000;
-            font-weight: 600;
-        }
-    </style>
+.welcome-text {
+    margin-top: 15px;
+    font-size: 22px;
+    color: #fff;
+}
+</style>
 </head>
 <body>
 
 <div class="container">
 
-    <!-- LOGIN FORM -->
-    <div id="login-form" class="form-container">
+    <!-- LOGIN -->
+    <div id="loginSection" class="section">
         <h2>Login</h2>
 
         <div class="input-group">
@@ -153,95 +147,136 @@
             <input type="password" id="password" placeholder="Password">
         </div>
 
-        <button id="login-btn">Login</button>
-        <button id="cancel-btn">Cancel</button>
+        <button class="btn-primary" id="loginBtn">Login</button>
+        <button class="btn-secondary" id="cancelBtn">Cancel</button>
 
-        <div id="login-message" class="message"></div>
+        <div id="message" class="message"></div>
     </div>
 
-    <!-- WELCOME PAGE -->
-    <div id="welcome-page" class="welcome-container hidden">
-        <div class="welcome-icon">👋</div>
+    <!-- WELCOME -->
+    <div id="welcomeSection" class="section hidden">
+        <div class="welcome-icon">🎉</div>
         <h2>Login Berhasil</h2>
-
-        <div class="welcome-message">
-            Halo <span id="display-name">Admin</span>, selamat datang di sistem!
+        <div class="welcome-text">
+            Halo <strong id="displayName"></strong>, selamat datang!
         </div>
-
-        <button id="logout-btn" class="logout-btn">Logout</button>
+        <button class="btn-danger" id="logoutBtn">Logout</button>
     </div>
 
 </div>
 
 <script>
-    // AKUN LOGIN
-    const validCredentials = {
-        username: "admin",
-        password: "adjie312"
-    };
-
-    // ELEMENT
-    const loginForm = document.getElementById("login-form");
-    const welcomePage = document.getElementById("welcome-page");
-    const loginBtn = document.getElementById("login-btn");
-    const cancelBtn = document.getElementById("cancel-btn");
-    const logoutBtn = document.getElementById("logout-btn");
-    const usernameInput = document.getElementById("username");
-    const passwordInput = document.getElementById("password");
-    const loginMessage = document.getElementById("login-message");
-    const displayName = document.getElementById("display-name");
-
-    function showMessage(text, type) {
-        loginMessage.textContent = text;
-        loginMessage.className = `message ${type}`;
-        loginMessage.style.display = "block";
+/* =======================
+   AUTH SERVICE (PBO)
+======================= */
+class AuthService {
+    constructor() {
+        this.validUser = {
+            username: "admin",
+            password: "adjie312"
+        };
     }
 
-    function handleLogin() {
-        const username = usernameInput.value.trim();
-        const password = passwordInput.value;
+    validate(username, password) {
+        return (
+            username === this.validUser.username &&
+            password === this.validUser.password
+        );
+    }
+}
+
+/* =======================
+   UI CONTROLLER
+======================= */
+class UIController {
+    constructor() {
+        this.loginSection = document.getElementById("loginSection");
+        this.welcomeSection = document.getElementById("welcomeSection");
+        this.messageBox = document.getElementById("message");
+        this.displayName = document.getElementById("displayName");
+    }
+
+    showMessage(text, type) {
+        this.messageBox.textContent = text;
+        this.messageBox.className = `message ${type}`;
+        this.messageBox.style.display = "block";
+    }
+
+    hideMessage() {
+        this.messageBox.style.display = "none";
+    }
+
+    showWelcome(username) {
+        this.displayName.textContent = username;
+        this.loginSection.classList.add("hidden");
+        this.welcomeSection.classList.remove("hidden");
+    }
+
+    logout() {
+        this.welcomeSection.classList.add("hidden");
+        this.loginSection.classList.remove("hidden");
+    }
+}
+
+/* =======================
+   MAIN APP
+======================= */
+class LoginApp {
+    constructor() {
+        this.auth = new AuthService();
+        this.ui = new UIController();
+
+        this.usernameInput = document.getElementById("username");
+        this.passwordInput = document.getElementById("password");
+
+        document.getElementById("loginBtn")
+            .addEventListener("click", () => this.login());
+
+        document.getElementById("cancelBtn")
+            .addEventListener("click", () => this.reset());
+
+        document.getElementById("logoutBtn")
+            .addEventListener("click", () => this.logout());
+
+        this.passwordInput.addEventListener("keydown", e => {
+            if (e.key === "Enter") this.login();
+        });
+    }
+
+    login() {
+        const username = this.usernameInput.value.trim();
+        const password = this.passwordInput.value;
 
         if (!username || !password) {
-            showMessage("Username dan password wajib diisi!", "error");
+            this.ui.showMessage("Username dan password wajib diisi!", "error");
             return;
         }
 
-        if (username === validCredentials.username && password === validCredentials.password) {
-            showMessage("Login berhasil!", "success");
-
+        if (this.auth.validate(username, password)) {
+            this.ui.showMessage("Login berhasil!", "success");
             setTimeout(() => {
-                loginMessage.style.display = "none";
-                loginForm.classList.add("hidden");
-                welcomePage.classList.remove("hidden");
-                displayName.textContent = username;
-            }, 800);
-
+                this.ui.hideMessage();
+                this.ui.showWelcome(username);
+            }, 700);
         } else {
-            showMessage("Username atau password salah!", "error");
+            this.ui.showMessage("Username atau password salah!", "error");
         }
     }
 
-    function handleCancel() {
-        usernameInput.value = "";
-        passwordInput.value = "";
-        loginMessage.style.display = "none";
+    reset() {
+        this.usernameInput.value = "";
+        this.passwordInput.value = "";
+        this.ui.hideMessage();
     }
 
-    function handleLogout() {
-        welcomePage.classList.add("hidden");
-        loginForm.classList.remove("hidden");
-        handleCancel();
+    logout() {
+        this.reset();
+        this.ui.logout();
     }
+}
 
-    loginBtn.addEventListener("click", handleLogin);
-    cancelBtn.addEventListener("click", handleCancel);
-    logoutBtn.addEventListener("click", handleLogout);
-
-    passwordInput.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") {
-            handleLogin();
-        }
-    });
+/* INIT APP */
+new LoginApp();
 </script>
 
 </body>
