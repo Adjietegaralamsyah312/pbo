@@ -3,33 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SecureAuth System</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Sistem Login PBO</title>
 
 <style>
 :root {
-    --primary: #2563eb;
-    --primary-dark: #1d4ed8;
-    --secondary: #7c3aed;
-    --success: #10b981;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-    --dark: #1e293b;
-    --light: #f8fafc;
-    --gray: #64748b;
-    --gray-light: #e2e8f0;
-    --glass: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(255, 255, 255, 0.2);
-    --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --primary: #6a11cb;
+    --secondary: #2575fc;
+    --danger: #f44336;
+    --success: #2ecc71;
+    --glass: rgba(255,255,255,0.25);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: "Poppins", sans-serif;
 }
 
 body {
@@ -37,923 +26,257 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    padding: 20px;
-    position: relative;
-    overflow-x: hidden;
-}
-
-body::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(circle at 20% 80%, rgba(37, 99, 235, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 50%);
-    z-index: -1;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
 }
 
 .container {
-    width: 100%;
-    max-width: 440px;
-    animation: fadeInUp 0.8s ease-out;
-}
-
-@keyframes fadeInUp {
-    from { 
-        opacity: 0; 
-        transform: translateY(30px); 
-    }
-    to { 
-        opacity: 1; 
-        transform: translateY(0); 
-    }
-}
-
-@keyframes slideIn {
-    from { transform: translateX(-20px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-.card {
-    backdrop-filter: blur(16px) saturate(180%);
+    width: 420px;
+    backdrop-filter: blur(12px);
     background: var(--glass);
-    border: 1px solid var(--glass-border);
-    border-radius: 24px;
-    box-shadow: var(--shadow), 0 0 100px rgba(37, 99, 235, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0,0,0,.25);
     overflow: hidden;
-    transition: var(--transition);
+    animation: fadeIn 0.8s ease;
 }
 
-.card:hover {
-    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2), 0 0 120px rgba(37, 99, 235, 0.15);
-    transform: translateY(-5px);
-}
-
-.card-header {
-    padding: 32px 32px 24px;
-    text-align: center;
-    border-bottom: 1px solid var(--glass-border);
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-.logo-icon {
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 24px;
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
-}
-
-.logo-text {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-    font-size: 28px;
-    background: linear-gradient(to right, var(--light), #cbd5e1);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.card-subtitle {
-    color: #94a3b8;
-    font-size: 15px;
-    font-weight: 400;
-    letter-spacing: 0.3px;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .section {
-    padding: 32px;
+    padding: 40px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 25px;
+    color: #fff;
 }
 
 .input-group {
-    margin-bottom: 24px;
-    position: relative;
-    animation: slideIn 0.5s ease-out forwards;
-    opacity: 0;
+    margin-bottom: 18px;
 }
 
-.input-group:nth-child(1) { animation-delay: 0.1s; }
-.input-group:nth-child(2) { animation-delay: 0.2s; }
-
-.input-label {
-    display: block;
-    margin-bottom: 8px;
-    color: #e2e8f0;
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.input-wrapper {
-    position: relative;
-}
-
-.input-icon {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #94a3b8;
-    font-size: 18px;
-    z-index: 1;
-}
-
-.input-field {
+input {
     width: 100%;
-    padding: 16px 16px 16px 52px;
-    background: rgba(15, 23, 42, 0.6);
-    border: 2px solid #334155;
-    border-radius: 12px;
-    color: #f1f5f9;
-    font-size: 15px;
-    font-weight: 500;
-    transition: var(--transition);
+    padding: 13px;
+    border-radius: 10px;
+    border: none;
     outline: none;
+    font-size: 15px;
 }
 
-.input-field:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-}
-
-.input-field::placeholder {
-    color: #64748b;
-}
-
-.toggle-password {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: #94a3b8;
-    cursor: pointer;
-    font-size: 18px;
-    transition: var(--transition);
-}
-
-.toggle-password:hover {
-    color: #e2e8f0;
-}
-
-.remember-forgot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 28px;
-    font-size: 14px;
-}
-
-.checkbox-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #94a3b8;
-    cursor: pointer;
-}
-
-.checkbox-group input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--primary);
-    cursor: pointer;
-}
-
-.forgot-link {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 500;
-    transition: var(--transition);
-}
-
-.forgot-link:hover {
-    color: #60a5fa;
-    text-decoration: underline;
-}
-
-.btn {
-    padding: 16px 24px;
-    border-radius: 12px;
-    border: none;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+button {
     width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: .3s;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: white;
-    margin-bottom: 16px;
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    color: #fff;
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, var(--primary-dark), #6d28d9);
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
-}
-
-.btn-primary:active {
-    transform: translateY(0);
+    box-shadow: 0 10px 25px rgba(0,0,0,.3);
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.08);
-    color: #e2e8f0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 10px;
+    background: #eee;
 }
 
-.btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.2);
-}
-
-.btn-icon {
-    font-size: 18px;
+.btn-danger {
+    background: linear-gradient(to right, var(--danger), #e91e63);
+    color: white;
+    margin-top: 25px;
 }
 
 .message {
-    margin-top: 20px;
-    padding: 16px;
-    border-radius: 12px;
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 10px;
     display: none;
-    align-items: center;
-    gap: 12px;
     font-weight: 500;
-    animation: slideIn 0.4s ease-out;
-}
-
-.message-icon {
-    font-size: 20px;
 }
 
 .success {
-    background: rgba(16, 185, 129, 0.15);
-    color: #34d399;
-    border: 1px solid rgba(16, 185, 129, 0.3);
+    background: rgba(46,204,113,.2);
+    color: #fff;
 }
 
 .error {
-    background: rgba(239, 68, 68, 0.15);
-    color: #f87171;
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    background: rgba(244,67,54,.25);
+    color: #fff;
 }
 
 .hidden {
-    display: none !important;
-}
-
-.welcome-section {
-    text-align: center;
-    padding: 40px 32px;
+    display: none;
 }
 
 .welcome-icon {
-    width: 100px;
-    height: 100px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 24px;
-    font-size: 42px;
-    color: white;
-    box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
-    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-@keyframes bounceIn {
-    0% { transform: scale(0.3); opacity: 0; }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-.welcome-title {
-    color: #f1f5f9;
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 12px;
-    font-family: 'Poppins', sans-serif;
+    font-size: 60px;
 }
 
 .welcome-text {
-    color: #94a3b8;
-    font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 32px;
-}
-
-.user-info {
-    background: rgba(15, 23, 42, 0.6);
-    border-radius: 16px;
-    padding: 20px;
-    margin: 24px 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.info-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.info-row:last-child {
-    border-bottom: none;
-}
-
-.info-label {
-    color: #94a3b8;
-    font-size: 14px;
-}
-
-.info-value {
-    color: #f1f5f9;
-    font-weight: 500;
-}
-
-.btn-logout {
-    background: linear-gradient(135deg, var(--danger), #dc2626);
-    color: white;
-    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
-}
-
-.btn-logout:hover {
-    background: linear-gradient(135deg, #dc2626, #b91c1c);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
-}
-
-.footer {
-    text-align: center;
-    margin-top: 32px;
-    color: #64748b;
-    font-size: 13px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.security-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(16, 185, 129, 0.15);
-    color: #34d399;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    margin-top: 10px;
-}
-
-.particles {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: -2;
-    pointer-events: none;
-}
-
-.particle {
-    position: absolute;
-    background: linear-gradient(135deg, var(--primary), transparent);
-    border-radius: 50%;
-    opacity: 0.1;
-}
-
-@media (max-width: 480px) {
-    .container {
-        max-width: 100%;
-    }
-    
-    .card-header, .section {
-        padding: 24px;
-    }
-    
-    .welcome-section {
-        padding: 32px 24px;
-    }
+    margin-top: 15px;
+    font-size: 22px;
+    color: #fff;
 }
 </style>
 </head>
 <body>
 
-<!-- Background particles -->
-<div class="particles" id="particles"></div>
-
 <div class="container">
-    <div class="card">
-        <!-- LOGIN SECTION -->
-        <div id="loginSection">
-            <div class="card-header">
-                <div class="logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <div class="logo-text">SecureAuth</div>
-                </div>
-                <div class="card-subtitle">Sistem Autentikasi Terenkripsi</div>
-            </div>
-            
-            <div class="section">
-                <div class="input-group">
-                    <label class="input-label">
-                        <i class="fas fa-user"></i>
-                        Username
-                    </label>
-                    <div class="input-wrapper">
-                        <div class="input-icon">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
-                        <input type="text" id="username" class="input-field" placeholder="Masukkan username Anda">
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">
-                        <i class="fas fa-key"></i>
-                        Password
-                    </label>
-                    <div class="input-wrapper">
-                        <div class="input-icon">
-                            <i class="fas fa-lock"></i>
-                        </div>
-                        <input type="password" id="password" class="input-field" placeholder="Masukkan password Anda">
-                        <button type="button" class="toggle-password" id="togglePassword">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="remember-forgot">
-                    <label class="checkbox-group">
-                        <input type="checkbox" id="rememberMe">
-                        Ingat saya
-                    </label>
-                    <a href="#" class="forgot-link">Lupa password?</a>
-                </div>
-                
-                <button class="btn btn-primary" id="loginBtn">
-                    <i class="fas fa-sign-in-alt btn-icon"></i>
-                    Login
-                </button>
-                
-                <button class="btn btn-secondary" id="cancelBtn">
-                    <i class="fas fa-times btn-icon"></i>
-                    Reset Form
-                </button>
-                
-                <div id="message" class="message">
-                    <i class="fas fa-info-circle message-icon"></i>
-                    <span id="messageText"></span>
-                </div>
-            </div>
+
+    <!-- LOGIN -->
+    <div id="loginSection" class="section">
+        <h2>Login Sistem</h2>
+
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Username">
         </div>
-        
-        <!-- WELCOME SECTION -->
-        <div id="welcomeSection" class="welcome-section hidden">
-            <div class="welcome-icon">
-                <i class="fas fa-user-check"></i>
-            </div>
-            
-            <h2 class="welcome-title">Login Berhasil!</h2>
-            
-            <div class="welcome-text">
-                Selamat datang kembali, <strong id="displayName"></strong>!<br>
-                Akses Anda telah diverifikasi dengan aman.
-            </div>
-            
-            <div class="user-info">
-                <div class="info-row">
-                    <span class="info-label">Waktu Login:</span>
-                    <span class="info-value" id="loginTime"></span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Status:</span>
-                    <span class="info-value" id="userStatus"></span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Sesi Aktif:</span>
-                    <span class="info-value" id="sessionStatus"></span>
-                </div>
-            </div>
-            
-            <button class="btn btn-logout" id="logoutBtn">
-                <i class="fas fa-sign-out-alt btn-icon"></i>
-                Logout
-            </button>
+
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Password">
         </div>
-        
-        <div class="footer">
-            <p>© 2024 SecureAuth System. Hak cipta dilindungi.</p>
-            <div class="security-badge">
-                <i class="fas fa-shield-alt"></i>
-                Sistem Terenkripsi AES-256
-            </div>
-        </div>
+
+        <button class="btn-primary" id="loginBtn">Login</button>
+        <button class="btn-secondary" id="cancelBtn">Cancel</button>
+
+        <div id="message" class="message"></div>
     </div>
+
+    <!-- WELCOME -->
+    <div id="welcomeSection" class="section hidden">
+        <div class="welcome-icon">🎉</div>
+        <h2>Login Berhasil</h2>
+        <div class="welcome-text">
+            Halo <strong id="displayName"></strong>, selamat datang!
+        </div>
+        <button class="btn-danger" id="logoutBtn">Logout</button>
+    </div>
+
 </div>
 
 <script>
-/* ============================================
-   ABSTRACT CLASSES & INTERFACES (POLYMORPHISM)
-============================================ */
-
-// Abstract Base Class
-class Authenticator {
-    authenticate(credentials) {
-        throw new Error("Method 'authenticate()' must be implemented");
-    }
-}
-
-// Interface untuk Notifikasi
-class NotificationInterface {
-    show(message, type) {
-        throw new Error("Method 'show()' must be implemented");
-    }
-    
-    hide() {
-        throw new Error("Method 'hide()' must be implemented");
-    }
-}
-
-/* ============================================
-   IMPLEMENTASI CONCRETE CLASSES
-============================================ */
-
-// 1. AUTH SERVICE (ENCAPSULATION & INHERITANCE)
-class DatabaseAuthService extends Authenticator {
-    #users = new Map(); // Private field
-    
+/* =======================
+   AUTH SERVICE (PBO)
+======================= */
+class AuthService {
     constructor() {
-        super();
-        // Encapsulated data
-        this.#users.set("admin", {
+        this.validUser = {
             username: "admin",
-            password: "adjie312",
-            fullName: "Admin Utama",
-            role: "Administrator",
-            lastLogin: null
-        });
-        this.#users.set("user", {
-            username: "user",
-            password: "password123",
-            fullName: "Pengguna Demo",
-            role: "User",
-            lastLogin: null
-        });
-    }
-    
-    // Implementasi method abstract
-    authenticate(credentials) {
-        const user = this.#users.get(credentials.username);
-        
-        if (!user || user.password !== credentials.password) {
-            return { success: false, message: "Username atau password salah" };
-        }
-        
-        // Update last login
-        user.lastLogin = new Date();
-        
-        return { 
-            success: true, 
-            user: { 
-                username: user.username,
-                fullName: user.fullName,
-                role: user.role,
-                lastLogin: user.lastLogin
-            }
+            password: "adjie312"
         };
     }
-    
-    // Overloading (konseptual) - Multiple authentication methods
-    authenticateWithToken(token) {
-        // Implementasi token authentication
-        console.log("Token auth:", token);
+
+    validate(username, password) {
+        return (
+            username === this.validUser.username &&
+            password === this.validUser.password
+        );
     }
 }
 
-// 2. UI CONTROLLER (IMPLEMENTASI INTERFACE)
-class UIController extends NotificationInterface {
+/* =======================
+   UI CONTROLLER
+======================= */
+class UIController {
     constructor() {
-        super();
         this.loginSection = document.getElementById("loginSection");
         this.welcomeSection = document.getElementById("welcomeSection");
         this.messageBox = document.getElementById("message");
-        this.messageText = document.getElementById("messageText");
         this.displayName = document.getElementById("displayName");
-        this.loginTime = document.getElementById("loginTime");
-        this.userStatus = document.getElementById("userStatus");
-        this.sessionStatus = document.getElementById("sessionStatus");
     }
-    
-    // Implementasi interface
-    show(message, type = "info") {
-        this.messageText.textContent = message;
+
+    showMessage(text, type) {
+        this.messageBox.textContent = text;
         this.messageBox.className = `message ${type}`;
-        this.messageBox.style.display = "flex";
-        
-        // Auto hide setelah 5 detik untuk error
-        if (type === "error") {
-            setTimeout(() => this.hide(), 5000);
-        }
+        this.messageBox.style.display = "block";
     }
-    
-    hide() {
+
+    hideMessage() {
         this.messageBox.style.display = "none";
     }
-    
-    // Method khusus untuk login berhasil
-    showWelcome(userData) {
-        this.displayName.textContent = userData.fullName;
-        this.loginTime.textContent = new Date().toLocaleTimeString("id-ID");
-        this.userStatus.textContent = userData.role;
-        this.sessionStatus.textContent = "Aktif";
-        
+
+    showWelcome(username) {
+        this.displayName.textContent = username;
         this.loginSection.classList.add("hidden");
         this.welcomeSection.classList.remove("hidden");
     }
-    
+
     logout() {
         this.welcomeSection.classList.add("hidden");
         this.loginSection.classList.remove("hidden");
     }
-    
-    // Polymorphism - Method overload (versi berbeda)
-    showWithDuration(message, type, duration) {
-        this.show(message, type);
-        setTimeout(() => this.hide(), duration);
-    }
 }
 
-// 3. SESSION MANAGER (SINGLETON PATTERN)
-class SessionManager {
-    static #instance = null;
-    #sessionData = null;
-    
+/* =======================
+   MAIN APP
+======================= */
+class LoginApp {
     constructor() {
-        if (SessionManager.#instance) {
-            return SessionManager.#instance;
-        }
-        SessionManager.#instance = this;
-    }
-    
-    static getInstance() {
-        if (!SessionManager.#instance) {
-            SessionManager.#instance = new SessionManager();
-        }
-        return SessionManager.#instance;
-    }
-    
-    createSession(userData) {
-        this.#sessionData = {
-            user: userData,
-            token: this.#generateToken(),
-            createdAt: new Date(),
-            expiresAt: new Date(Date.now() + 30 * 60 * 1000) // 30 menit
-        };
-        return this.#sessionData;
-    }
-    
-    getSession() {
-        return this.#sessionData;
-    }
-    
-    destroySession() {
-        this.#sessionData = null;
-    }
-    
-    #generateToken() {
-        return 'token_' + Math.random().toString(36).substr(2, 16);
-    }
-}
+        this.auth = new AuthService();
+        this.ui = new UIController();
 
-// 4. INPUT VALIDATOR (COMPOSITION)
-class InputValidator {
-    static validateUsername(username) {
-        if (!username.trim()) return "Username tidak boleh kosong";
-        if (username.length < 3) return "Username minimal 3 karakter";
-        if (!/^[a-zA-Z0-9_]+$/.test(username)) return "Username hanya boleh berisi huruf, angka, dan underscore";
-        return null;
-    }
-    
-    static validatePassword(password) {
-        if (!password) return "Password tidak boleh kosong";
-        if (password.length < 6) return "Password minimal 6 karakter";
-        return null;
-    }
-}
-
-// 5. THEME MANAGER (OBSERVER PATTERN)
-class ThemeManager {
-    constructor() {
-        this.subscribers = [];
-        this.isDarkMode = true;
-    }
-    
-    subscribe(callback) {
-        this.subscribers.push(callback);
-    }
-    
-    toggleTheme() {
-        this.isDarkMode = !this.isDarkMode;
-        this.notify();
-    }
-    
-    notify() {
-        this.subscribers.forEach(callback => callback(this.isDarkMode));
-    }
-}
-
-/* ============================================
-   MAIN APPLICATION (FACADE PATTERN)
-============================================ */
-
-class SecureAuthApp {
-    constructor() {
-        // Dependency Injection
-        this.authService = new DatabaseAuthService();
-        this.uiController = new UIController();
-        this.sessionManager = SessionManager.getInstance();
-        this.themeManager = new ThemeManager();
-        
-        // Initialize components
-        this.#initComponents();
-        this.#initEventListeners();
-        this.#initParticles();
-        
-        // Cek session yang ada
-        this.#checkExistingSession();
-    }
-    
-    #initComponents() {
         this.usernameInput = document.getElementById("username");
         this.passwordInput = document.getElementById("password");
-        this.rememberMe = document.getElementById("rememberMe");
-        this.togglePasswordBtn = document.getElementById("togglePassword");
-    }
-    
-    #initEventListeners() {
-        // Login button
-        document.getElementById("loginBtn").addEventListener("click", () => this.login());
-        
-        // Cancel/Reset button
-        document.getElementById("cancelBtn").addEventListener("click", () => this.reset());
-        
-        // Logout button
-        document.getElementById("logoutBtn").addEventListener("click", () => this.logout());
-        
-        // Enter key untuk login
+
+        document.getElementById("loginBtn")
+            .addEventListener("click", () => this.login());
+
+        document.getElementById("cancelBtn")
+            .addEventListener("click", () => this.reset());
+
+        document.getElementById("logoutBtn")
+            .addEventListener("click", () => this.logout());
+
         this.passwordInput.addEventListener("keydown", e => {
             if (e.key === "Enter") this.login();
         });
-        
-        // Toggle password visibility
-        this.togglePasswordBtn.addEventListener("click", () => this.togglePasswordVisibility());
-        
-        // Theme toggle (contoh observer pattern)
-        this.themeManager.subscribe((isDark) => {
-            console.log("Theme changed to:", isDark ? "Dark" : "Light");
-        });
     }
-    
-    #initParticles() {
-        const particlesContainer = document.getElementById('particles');
-        for (let i = 0; i < 50; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.width = `${Math.random() * 5 + 2}px`;
-            particle.style.height = particle.style.width;
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.top = `${Math.random() * 100}%`;
-            particle.style.animationDelay = `${Math.random() * 5}s`;
-            particle.style.animation = `float ${Math.random() * 10 + 10}s infinite ease-in-out`;
-            particlesContainer.appendChild(particle);
-        }
-    }
-    
-    #checkExistingSession() {
-        const session = this.sessionManager.getSession();
-        if (session && session.expiresAt > new Date()) {
-            this.uiController.showWelcome(session.user);
-        }
-    }
-    
+
     login() {
-        // Validasi input
-        const usernameError = InputValidator.validateUsername(this.usernameInput.value);
-        const passwordError = InputValidator.validatePassword(this.passwordInput.value);
-        
-        if (usernameError || passwordError) {
-            this.uiController.show(usernameError || passwordError, "error");
+        const username = this.usernameInput.value.trim();
+        const password = this.passwordInput.value;
+
+        if (!username || !password) {
+            this.ui.showMessage("Username dan password wajib diisi!", "error");
             return;
         }
-        
-        // Autentikasi
-        const credentials = {
-            username: this.usernameInput.value.trim(),
-            password: this.passwordInput.value
-        };
-        
-        const result = this.authService.authenticate(credentials);
-        
-        if (result.success) {
-            // Buat session
-            const session = this.sessionManager.createSession(result.user);
-            
-            // Tampilkan notifikasi sukses
-            this.uiController.show("Login berhasil! Mengalihkan...", "success");
-            
-            // Update UI setelah delay
+
+        if (this.auth.validate(username, password)) {
+            this.ui.showMessage("Login berhasil!", "success");
             setTimeout(() => {
-                this.uiController.hide();
-                this.uiController.showWelcome(result.user);
-                this.reset();
-                
-                // Simpan ke localStorage jika remember me dicentang
-                if (this.rememberMe.checked) {
-                    localStorage.setItem('lastUsername', credentials.username);
-                }
-            }, 1000);
+                this.ui.hideMessage();
+                this.ui.showWelcome(username);
+            }, 700);
         } else {
-            this.uiController.show(result.message, "error");
+            this.ui.showMessage("Username atau password salah!", "error");
         }
     }
-    
+
     reset() {
         this.usernameInput.value = "";
         this.passwordInput.value = "";
-        this.rememberMe.checked = false;
-        this.uiController.hide();
+        this.ui.hideMessage();
     }
-    
+
     logout() {
-        this.sessionManager.destroySession();
-        this.uiController.logout();
-        this.uiController.show("Anda telah logout dari sistem", "success");
-        setTimeout(() => this.uiController.hide(), 3000);
-    }
-    
-    togglePasswordVisibility() {
-        const type = this.passwordInput.type === "password" ? "text" : "password";
-        this.passwordInput.type = type;
-        this.togglePasswordBtn.innerHTML = type === "password" 
-            ? '<i class="fas fa-eye"></i>' 
-            : '<i class="fas fa-eye-slash"></i>';
+        this.reset();
+        this.ui.logout();
     }
 }
 
-/* ============================================
-   INISIALISASI APLIKASI
-============================================ */
-
-// Inisialisasi saat DOM siap
-document.addEventListener('DOMContentLoaded', () => {
-    const app = new SecureAuthApp();
-    
-    // Contoh penggunaan theme manager (observer pattern)
-    setTimeout(() => {
-        app.themeManager.toggleTheme(); // Akan memanggil semua subscriber
-    }, 5000);
-    
-    // Tambahkan style untuk animasi particle
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes float {
-            0%, 100% { transform: translateY(0) translateX(0); }
-            25% { transform: translateY(-20px) translateX(10px); }
-            50% { transform: translateY(-10px) translateX(-10px); }
-            75% { transform: translateY(20px) translateX(5px); }
-        }
-    `;
-    document.head.appendChild(style);
-});
-
-// Ekspos untuk testing (jika diperlukan)
-window.SecureAuthApp = SecureAuthApp;
+/* INIT APP */
+new LoginApp();
 </script>
 
 </body>
