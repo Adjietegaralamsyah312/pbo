@@ -1,4 +1,4 @@
-// skrip.js
+// script.js - Gourmet Haven Restaurant
 document.addEventListener('DOMContentLoaded', function() {
     // ================ VARIABEL GLOBAL ================
     let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
