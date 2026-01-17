@@ -1,1869 +1,1090 @@
-:root {
-    --primary-color: #c19a53;
-    --primary-dark: #a67c00;
-    --secondary-color: #1a1a1a;
-    --accent-color: #8b4513;
-    --light-color: #f9f7f2;
-    --dark-color: #121212;
-    --gray-color: #666666;
-    --light-gray: #e8e8e8;
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    --shadow-heavy: 0 15px 40px rgba(0, 0, 0, 0.15);
-    --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-    --border-radius: 12px;
-    --border-radius-sm: 8px;
-}
+// skrip.js
+document.addEventListener('DOMContentLoaded', function() {
+    // ================ VARIABEL GLOBAL ================
+    let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let currentPaymentStep = 1;
+    let currentPaymentMethod = 'qris';
+    let menuItemsData = [];
+    let currentCategory = 'all';
+    let renderObserver = null; // Cache untuk intersection observer
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    // ================ DATA STATIC ================
+    const features = [
+        {
+            icon: 'fas fa-award',
+            title: 'Kualitas Premium',
+            description: 'Bahan-bahan terbaik dari petani lokal dan importir terpercaya untuk rasa autentik.'
+        },
+        {
+            icon: 'fas fa-user-tie',
+            title: 'Pelayanan Eksklusif',
+            description: 'Pelayanan personal dari staf profesional dengan standar internasional.'
+        },
+        {
+            icon: 'fas fa-wine-glass-alt',
+            title: 'Wine Collection',
+            description: 'Koleksi wine eksklusif dari berbagai negara yang dipadukan dengan menu.'
+        },
+        {
+            icon: 'fas fa-seedling',
+            title: 'Bahan Organik',
+            description: 'Sayuran dan buah organik dari perkebunan sendiri untuk kesehatan optimal.'
+        }
+    ];
 
-html {
-    scroll-behavior: smooth;
-    font-size: 16px;
-}
+    const menuItems = [
+        {
+            id: 1,
+            name: 'Lobster Thermidor',
+            description: 'Lobster segar dengan saus thermidor klasik, keju gruyère, dan remah roti panggang.',
+            price: 450000,
+            category: 'appetizer',
+            rating: 4.9,
+            image: 'https://static01.nyt.com/images/2024/02/09/multimedia/LH-lobster-thermidor-plzk/LH-lobster-thermidor-plzk-master768.jpg?quality=75&auto=webp'
+        },
+        {
+            id: 2,
+            name: 'Wagyu Beef Steak',
+            description: 'Daging wagyu A5 premium dengan saus truffle dan kentang dauphinoise.',
+            price: 850000,
+            category: 'main-course',
+            rating: 5.0,
+            image: 'https://image.idntimes.com/post/20240612/img-20240612-160446-4ff506ecf74a17f22c11b39143537d58-39231715f6560e4cdb4a24545770525a.jpg?tr=w-1200,f-webp,q-75&width=1200&format=webp&quality=75'
+        },
+        {
+            id: 3,
+            name: 'Foie Gras Terrine',
+            description: 'Terrine foie gras dengan chutney buah ara dan roti brioche panggang.',
+            price: 350000,
+            category: 'appetizer',
+            rating: 4.8,
+            image: 'https://d3h1lg3ksw6i6b.cloudfront.net/media/image/2018/10/05/661a1472ec334a2893102faa531d8252_Foie+Gras+Terrine+with+65%25+Dark+Chocolate+and+Roasted+Cacao+Nibs+1_PORTA.jpg'
+        },
+        {
+            id: 4,
+            name: 'Black Cod Miso',
+            description: 'Cod hitam dengan fermentasi miso 48 jam dan sayuran musiman.',
+            price: 380000,
+            category: 'main-course',
+            rating: 4.7,
+            image: 'https://i0.wp.com/wishbonekitchen.com/wp-content/uploads/2022/11/IMG_9689_jpg-2.jpg?w=1125&ssl=1'
+        },
+        {
+            id: 5,
+            name: 'Truffle Risotto',
+            description: 'Risotto dengan truffle hitam segar dan parmesan reggiano.',
+            price: 320000,
+            category: 'main-course',
+            rating: 4.8,
+            image: 'https://alwaysfromscratch.com/wp-content/uploads/2023/10/Mushroom-truffle-risotto-13.jpg'
+        },
+        {
+            id: 6,
+            name: 'Chocolate Soufflé',
+            description: 'Soufflé cokelat Belgia dengan es krim vanilla Madagascar.',
+            price: 180000,
+            category: 'dessert',
+            rating: 4.9,
+            image: 'https://media-cdn2.greatbritishchefs.com/media/4cgla1l1/img10652.whqc_900x600q90.webp'
+        },
+        {
+            id: 7,
+            name: 'Salmon Tartare',
+            description: 'Salmon tartare dengan avocado, capers, dan dressing lemon-dill.',
+            price: 280000,
+            category: 'appetizer',
+            rating: 4.6,
+            image: 'https://images.immediate.co.uk/production/volatile/sites/2/2015/10/15144.jpg?quality=90&crop=2px,0px,596px,542px&resize=600,545'
+        },
+        {
+            id: 8,
+            name: 'Tiramisu Classico',
+            description: 'Tiramisu klasik dengan mascarpone dan espresso robusta.',
+            price: 150000,
+            category: 'dessert',
+            rating: 4.7,
+            image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+        },
+        {
+            id: 9,
+            name: 'Sushi Omakase',
+            description: 'Koleksi 12 pieces sushi premium pilihan chef dengan ikan segar dari Tokyo, disajikan dengan wasabi autentik dan ginger pickled.',
+            price: 520000,
+            category: 'appetizer',
+            rating: 5.0,
+            image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+        }
+    ];
 
-body {
-    font-family: 'Inter', sans-serif;
-    line-height: 1.7;
-    color: var(--secondary-color);
-    background-color: var(--light-color);
-    overflow-x: hidden;
-    font-weight: 400;
-}
+    const chefs = [
+        {
+            name: 'Chef Marco Alessandro',
+            role: 'Executive Chef',
+            bio: 'Pengalaman 20+ tahun di restoran Michelin-starred di Eropa',
+            image: 'https://www.escoffier.edu/wp-content/uploads/2022/03/Smiling-male-chef-with-white-coat-and-hat-768.jpg' // chef pria profesional
+        },
+        {
+            name: 'Chef Sofia Rodriguez',
+            role: 'Pastry Chef',
+            bio: 'Spesialis dessert modern dengan sentuhan tradisional',
+            image: 'https://images.unsplash.com/photo-1595475038784-bbe439ff41e6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+        },
+        {
+            name: 'Chef Kenji Tanaka',
+            role: 'Sushi Master',
+            bio: 'Ahli sushi generasi kelima dari Tokyo, Jepang',
+            image: 'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+        }
+    ];
 
-h1, h2, h3, h4, h5 {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 600;
-    margin-bottom: 1.2rem;
-    color: var(--secondary-color);
-    line-height: 1.2;
-}
+    const galleryImages = [
+        'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1578474846511-04ba529f0b88?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    ];
 
-h1 {
-    font-size: clamp(2.8rem, 5vw, 4.5rem);
-    font-weight: 700;
-    letter-spacing: -0.5px;
-}
-
-h2 {
-    font-size: clamp(2.2rem, 4vw, 3.2rem);
-    text-align: center;
-    margin-bottom: 3rem;
-    position: relative;
-}
-
-h2::after {
-    content: '';
-    position: absolute;
-    width: 100px;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-    bottom: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 2px;
-}
-
-h3 {
-    font-size: clamp(1.8rem, 3vw, 2.4rem);
-}
-
-p {
-    margin-bottom: 1.5rem;
-    color: var(--gray-color);
-    font-size: clamp(0.95rem, 2vw, 1.05rem);
-}
-
-.container {
-    width: 100%;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 clamp(1rem, 3vw, 2rem);
-}
-
-section {
-    padding: clamp(4rem, 8vw, 6rem) 0;
-    position: relative;
-}
-
-.section-title {
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
-    text-align: center;
-}
-
-.section-title p {
-    max-width: 700px;
-    margin: 0 auto;
-    font-size: 1.1rem;
-    color: var(--gray-color);
-}
-
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    color: white;
-    border: none;
-    border-radius: var(--border-radius-sm);
-    font-weight: 600;
-    font-size: clamp(0.9rem, 2vw, 1rem);
-    cursor: pointer;
-    transition: var(--transition);
-    text-decoration: none;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-    letter-spacing: 0.5px;
-}
-
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, var(--accent-color), var(--primary-dark));
-    transition: var(--transition);
-    z-index: -1;
-}
-
-.btn:hover::before {
-    left: 0;
-}
-
-.btn:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-heavy);
-}
-
-.btn-secondary {
-    background: transparent;
-    border: 2px solid var(--primary-color);
-    color: var(--primary-color);
-}
-
-.btn-secondary::before {
-    background: var(--primary-color);
-}
-
-.btn-secondary:hover {
-    color: white;
-}
-
-.btn i {
-    font-size: 1.1em;
-}
-
-/* Header & Navigation */
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    background-color: rgba(18, 18, 18, 0.95);
-    padding: clamp(1rem, 2vw, 1.2rem) 0;
-    transition: var(--transition);
-    backdrop-filter: blur(10px);
-}
-
-header.scrolled {
-    padding: 0.8rem 0;
-    box-shadow: var(--shadow);
-}
-
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 700;
-    color: var(--primary-color);
-    text-decoration: none;
-    z-index: 1001;
-}
-
-.logo-icon {
-    font-size: 1.8em;
-    color: var(--primary-color);
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: clamp(1rem, 2vw, 2rem);
-}
-
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: clamp(0.9rem, 1.5vw, 1rem);
-    transition: var(--transition);
-    position: relative;
-    padding: 0.5rem 0;
-}
-
-.nav-links a::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    background-color: var(--primary-color);
-    bottom: 0;
-    left: 0;
-    transition: var(--transition);
-}
-
-.nav-links a:hover {
-    color: var(--primary-color);
-}
-
-.nav-links a:hover::after,
-.nav-links a.active::after {
-    width: 100%;
-}
-
-.nav-links a.active {
-    color: var(--primary-color);
-}
-
-/* User Menu Container */
-.user-menu-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.user-profile-btn {
-    background: none;
-    border: 2px solid var(--primary-color);
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: var(--transition);
-    position: relative;
-}
-
-.user-profile-btn:hover {
-    background-color: rgba(193, 154, 83, 0.1);
-    transform: scale(1.1);
-}
-
-.user-avatar {
-    font-weight: 700;
-    color: var(--primary-color);
-    font-size: 1.2rem;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* User Dropdown Menu */
-.user-dropdown-menu {
-    position: absolute;
-    top: 60px;
-    right: 0;
-    background: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-heavy);
-    min-width: 280px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: var(--transition);
-    z-index: 1100;
-    overflow: hidden;
-}
-
-.user-dropdown-menu.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.dropdown-user-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.5rem;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    color: white;
-}
-
-.dropdown-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1.3rem;
-    flex-shrink: 0;
-}
-
-.dropdown-user-details {
-    flex: 1;
-    min-width: 0;
-}
-
-.dropdown-user-name {
-    margin: 0;
-    font-weight: 600;
-    font-size: 1rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.dropdown-user-email {
-    margin: 0.3rem 0 0 0;
-    font-size: 0.85rem;
-    opacity: 0.9;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.dropdown-divider {
-    height: 1px;
-    background-color: var(--light-gray);
-}
-
-.dropdown-item {
-    width: 100%;
-    padding: 1rem 1.5rem;
-    border: none;
-    background: none;
-    color: var(--secondary-color);
-    cursor: pointer;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    transition: var(--transition);
-    text-align: left;
-}
-
-.dropdown-item:hover {
-    background-color: var(--light-color);
-    color: var(--primary-color);
-}
-
-.dropdown-item i {
-    font-size: 1.1rem;
-}
-
-.mobile-menu-btn {
-    display: none;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.8rem;
-    cursor: pointer;
-    z-index: 1001;
-    padding: 0.5rem;
-    border-radius: 4px;
-    transition: var(--transition);
-}
-
-.mobile-menu-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Login Modal */
-.login-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    backdrop-filter: blur(5px);
-}
-
-.login-modal.active {
-    display: flex;
-}
-
-.login-modal-content {
-    background: white;
-    padding: clamp(2rem, 5vw, 3rem);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-heavy);
-    max-width: 450px;
-    width: 90%;
-    animation: slideInDown 0.4s ease-out;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-@keyframes slideInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-50px);
+    // ================ FUNGSI UTILITAS ================
+    function formatRupiah(amount) {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(amount);
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
-.login-modal-header {
-    text-align: center;
-    margin-bottom: 2rem;
-    position: relative;
-}
-
-.login-modal-close {
-    position: absolute;
-    top: -15px;
-    right: -15px;
-    background: white;
-    border: none;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    color: var(--primary-color);
-    transition: var(--transition);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.login-modal-close:hover {
-    background-color: var(--primary-color);
-    color: white;
-    transform: scale(1.1);
-}
-
-.login-modal-close i {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.login-modal-header h2 {
-    margin-bottom: 0.5rem;
-    color: var(--secondary-color);
-    font-size: 1.8rem;
-}
-
-.login-modal-header h2 i {
-    color: var(--primary-color);
-    margin-right: 0.5rem;
-}
-
-.login-modal-header p {
-    color: var(--gray-color);
-    margin: 0;
-    font-size: 0.95rem;
-}
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.login-form .form-group label {
-    font-weight: 600;
-    color: var(--secondary-color);
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-.login-form .form-group input {
-    width: 100%;
-    padding: 0.9rem 1.2rem;
-    border: 2px solid var(--light-gray);
-    border-radius: var(--border-radius-sm);
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    transition: var(--transition);
-}
-
-.login-form .form-group input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(193, 154, 83, 0.1);
-}
-
-.login-form .form-group input::placeholder {
-    color: #999;
-}
-
-/* Hero Section dengan Fallback */
-.hero {
-    height: 100vh;
-    min-height: 700px;
-    display: flex;
-    align-items: center;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(45deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 100%);
-}
-
-.hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        linear-gradient(45deg, #2c3e50, #4a235a),
-        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231a1a2e"/><path d="M0,50 Q25,25 50,50 T100,50" stroke="%23344fa1" stroke-width="2" fill="none"/></svg>');
-    background-size: cover;
-    background-position: center;
-    z-index: -1;
-}
-
-.hero-content {
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: center;
-    position: relative;
-    z-index: 2;
-}
-
-.hero h1 {
-    color: white;
-    margin-bottom: 1.5rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.hero p {
-    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-    margin-bottom: 2.5rem;
-    color: rgba(255, 255, 255, 0.9);
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.8;
-}
-
-.hero-btns {
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-/* Image Fallback Styling */
-.image-fallback {
-    background: linear-gradient(45deg, #f5f5f5, #e0e0e0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gray-color);
-    font-weight: 500;
-    text-align: center;
-    padding: 2rem;
-}
-
-.menu-item-img, .chef-img, .gallery-item img {
-    background: linear-gradient(45deg, #f8f8f8, #e8e8e8);
-    position: relative;
-}
-
-.menu-item-img::after, .chef-img::after {
-    content: '🍽️';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2rem;
-    opacity: 0.3;
-}
-
-/* Features Section */
-.features {
-    background-color: white;
-}
-
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-    gap: clamp(1.5rem, 3vw, 2.5rem);
-    margin-top: 3rem;
-}
-
-.feature-card {
-    background: white;
-    padding: clamp(1.5rem, 3vw, 2.5rem);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    transition: var(--transition);
-    text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.feature-card:hover {
-    transform: translateY(-15px);
-    box-shadow: var(--shadow-heavy);
-}
-
-.feature-icon {
-    font-size: 3rem;
-    color: var(--primary-color);
-    margin-bottom: 1.5rem;
-}
-
-.feature-card h3 {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-}
-
-/* Menu Section */
-.menu {
-    background-color: var(--light-color);
-}
-
-.menu-categories {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-    margin-bottom: clamp(2rem, 4vw, 3.5rem);
-}
-
-.category-btn {
-    padding: 0.8rem 1.8rem;
-    background-color: white;
-    border: 2px solid var(--light-gray);
-    border-radius: 50px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    font-size: 0.95rem;
-}
-
-.category-btn.active,
-.category-btn:hover {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    color: white;
-    border-color: transparent;
-    transform: translateY(-3px);
-}
-
-.menu-items {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
-    gap: clamp(1.5rem, 3vw, 2.5rem);
-}
-
-.menu-item {
-    background-color: white;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: var(--transition);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.menu-item:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-heavy);
-}
-
-.menu-item-img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    transition: var(--transition);
-    display: block !important;
-}
-
-.menu-item-img ~ .image-fallback {
-    display: none !important;
-}
-
-.menu-item:hover .menu-item-img {
-    transform: scale(1.05);
-}
-
-.menu-item-content {
-    padding: clamp(1.2rem, 2vw, 1.8rem);
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.menu-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 0.8rem;
-}
-
-.menu-item-name {
-    font-size: 1.4rem;
-    margin-bottom: 0;
-    flex: 1;
-}
-
-.menu-item-price {
-    color: var(--primary-color);
-    font-weight: 700;
-    font-size: 1.3rem;
-    white-space: nowrap;
-    margin-left: 1rem;
-}
-
-.menu-item-category {
-    display: inline-block;
-    padding: 0.3rem 0.8rem;
-    background-color: var(--light-color);
-    color: var(--primary-color);
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.menu-item-desc {
-    color: var(--gray-color);
-    margin-bottom: 1.5rem;
-    flex-grow: 1;
-}
-
-.menu-item-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
-}
-
-.rating {
-    color: #ffc107;
-    font-size: 0.9rem;
-}
-
-/* Chef Section */
-.chef-section {
-    background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9));
-    background-size: cover;
-    background-position: center;
-    color: white;
-}
-
-.chef-section h2 {
-    color: white;
-}
-
-.chef-section h2::after {
-    background: var(--primary-color);
-}
-
-.chef-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
-    gap: 2rem;
-}
-
-.chef-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    transition: var(--transition);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.chef-card:hover {
-    transform: translateY(-10px);
-    border-color: var(--primary-color);
-}
-
-.chef-img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    display: block !important;
-}
-
-.chef-img ~ .image-fallback {
-    display: none !important;
-}
-
-.chef-info {
-    padding: 1.8rem;
-    text-align: center;
-}
-
-.chef-info h3 {
-    color: white;
-    margin-bottom: 0.5rem;
-}
-
-.chef-role {
-    color: var(--primary-color);
-    font-weight: 600;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-}
-
-/* Gallery */
-.gallery {
-    background-color: white;
-}
-
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
-    gap: 1.2rem;
-}
-
-.gallery-item {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    position: relative;
-    height: 280px;
-    cursor: pointer;
-    background: linear-gradient(45deg, #f8f8f8, #e8e8e8);
-}
-
-.gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: var(--transition);
-}
-
-.gallery-item:hover img {
-    transform: scale(1.1);
-}
-
-.gallery-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    display: flex;
-    align-items: flex-end;
-    padding: 1.5rem;
-    opacity: 0;
-    transition: var(--transition);
-}
-
-.gallery-item:hover .gallery-overlay {
-    opacity: 1;
-}
-
-/* Reservation */
-.reservation {
-    background-color: var(--light-color);
-}
-
-.reservation-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(2rem, 4vw, 4rem);
-    align-items: center;
-}
-
-.reservation-info h2 {
-    text-align: left;
-}
-
-.reservation-info h2::after {
-    left: 0;
-    transform: none;
-}
-
-.reservation-details {
-    margin: 2rem 0;
-}
-
-.detail-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.detail-icon {
-    width: 50px;
-    height: 50px;
-    background-color: var(--primary-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.2rem;
-}
-
-.reservation-form {
-    background: white;
-    padding: clamp(1.5rem, 3vw, 2.5rem);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.2rem;
-}
-
-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: var(--secondary-color);
-    font-size: 0.95rem;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 0.9rem 1.2rem;
-    border: 1px solid var(--light-gray);
-    border-radius: var(--border-radius-sm);
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    transition: var(--transition);
-    background-color: white;
-}
-
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(193, 154, 83, 0.1);
-}
-
-/* Footer */
-footer {
-    background-color: var(--dark-color);
-    color: white;
-    padding: clamp(3rem, 5vw, 5rem) 0 2rem;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
-    gap: clamp(2rem, 4vw, 3rem);
-    margin-bottom: 3rem;
-}
-
-.footer-column h3 {
-    color: white;
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    position: relative;
-    padding-bottom: 0.8rem;
-}
-
-.footer-column h3::after {
-    content: '';
-    position: absolute;
-    width: 40px;
-    height: 3px;
-    background-color: var(--primary-color);
-    bottom: 0;
-    left: 0;
-}
-
-.footer-links {
-    list-style: none;
-}
-
-.footer-links li {
-    margin-bottom: 0.8rem;
-}
-
-.footer-links a {
-    color: #aaa;
-    text-decoration: none;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.footer-links a:hover {
-    color: var(--primary-color);
-    transform: translateX(5px);
-}
-
-.social-links {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-
-.social-links a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    color: white;
-    text-decoration: none;
-    transition: var(--transition);
-}
-
-.social-links a:hover {
-    background-color: var(--primary-color);
-    transform: translateY(-5px) rotate(5deg);
-}
-
-.newsletter-form {
-    margin-top: 1.5rem;
-}
-
-.newsletter-form input {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    margin-bottom: 1rem;
-}
-
-.newsletter-form input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.copyright {
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    color: #888;
-    font-size: 0.9rem;
-}
-
-/* Back to Top Button */
-.back-to-top {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    opacity: 0;
-    visibility: hidden;
-    transition: var(--transition);
-    z-index: 999;
-    box-shadow: 0 8px 25px rgba(193, 154, 83, 0.35);
-    font-size: 1.4rem;
-}
-
-.back-to-top.visible {
-    opacity: 1;
-    visibility: visible;
-}
-
-.back-to-top:hover {
-    transform: translateY(-8px) scale(1.1);
-    box-shadow: 0 12px 35px rgba(193, 154, 83, 0.5);
-}
-
-/* Loading Animation */
-.loading {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* TOAST NOTIFICATION SYSTEM - FIXED FOR MOBILE */
-.toast-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 350px;
-    width: 90%;
-}
-
-.toast {
-    background: white;
-    border-radius: var(--border-radius-sm);
-    padding: 15px 20px;
-    box-shadow: var(--shadow-heavy);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    animation: toastSlideIn 0.3s ease forwards;
-    transform: translateX(100%);
-    opacity: 0;
-    transition: all 0.3s ease;
-    border-left: 4px solid #4CAF50;
-    max-width: 100%;
-}
-
-.toast.error {
-    border-left-color: #f44336;
-}
-
-.toast.success {
-    border-left-color: #4CAF50;
-}
-
-.toast.info {
-    border-left-color: #2196F3;
-}
-
-.toast.hiding {
-    animation: toastSlideOut 0.3s ease forwards;
-    opacity: 0;
-    transform: translateX(100%);
-}
-
-@keyframes toastSlideIn {
-    from {
-        opacity: 0;
-        transform: translateX(100%);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes toastSlideOut {
-    from {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateX(100%);
-    }
-}
-
-.toast-icon {
-    font-size: 1.5rem;
-    flex-shrink: 0;
-}
-
-.toast.success .toast-icon {
-    color: #4CAF50;
-}
-
-.toast.error .toast-icon {
-    color: #f44336;
-}
-
-.toast.info .toast-icon {
-    color: #2196F3;
-}
-
-.toast-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.toast-message {
-    font-size: 0.95rem;
-    color: var(--secondary-color);
-    line-height: 1.4;
-    word-break: break-word;
-}
-
-.toast-close {
-    background: none;
-    border: none;
-    color: var(--gray-color);
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0;
-    margin-left: 10px;
-    flex-shrink: 0;
-    transition: color 0.2s;
-}
-
-.toast-close:hover {
-    color: var(--primary-color);
-}
-
-/* Shopping Cart Floating Button */
-.cart-floating {
-    position: fixed;
-    bottom: 100px;
-    right: 25px;
-    z-index: 998;
-    display: none;
-}
-
-.cart-btn {
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    border: none;
-    color: white;
-    font-size: 1.6rem;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    box-shadow: 0 8px 25px rgba(193, 154, 83, 0.35);
-}
-
-.cart-btn:hover {
-    transform: scale(1.15) translateY(-5px);
-    box-shadow: 0 12px 35px rgba(193, 154, 83, 0.5);
-}
-
-.cart-count {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: var(--accent-color);
-    color: white;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    font-size: 0.85rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Payment Modal */
-.payment-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.payment-modal-content {
-    background-color: white;
-    border-radius: var(--border-radius);
-    width: 100%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-heavy);
-    animation: modalSlideIn 0.3s ease;
-}
-
-@keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.payment-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--light-gray);
-}
-
-.payment-modal-header h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.payment-close-btn {
-    background: none;
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-    color: var(--gray-color);
-    transition: var(--transition);
-    line-height: 1;
-}
-
-.payment-close-btn:hover {
-    color: var(--accent-color);
-}
-
-.payment-modal-body {
-    padding: 1.5rem;
-}
-
-.payment-modal-footer {
-    padding: 1.5rem;
-    border-top: 1px solid var(--light-gray);
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-}
-
-/* Payment Steps */
-.payment-steps {
-    position: relative;
-}
-
-.step {
-    display: none;
-}
-
-.step.active {
-    display: block;
-    animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.step h3 {
-    margin-bottom: 1.5rem;
-    color: var(--primary-color);
-    font-size: 1.3rem;
-}
-
-/* Order Summary */
-.order-summary {
-    max-height: 200px;
-    overflow-y: auto;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--light-gray);
-    border-radius: var(--border-radius-sm);
-    padding: 1rem;
-}
-
-.order-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.8rem 0;
-    border-bottom: 1px solid var(--light-gray);
-}
-
-.order-item:last-child {
-    border-bottom: none;
-}
-
-.order-item-info {
-    flex: 1;
-}
-
-.order-item-name {
-    font-weight: 600;
-    margin-bottom: 0.3rem;
-}
-
-.order-item-price {
-    color: var(--primary-color);
-    font-weight: 600;
-}
-
-.order-item-quantity {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.quantity-btn {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    border: 1px solid var(--light-gray);
-    background: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    transition: var(--transition);
-}
-
-.quantity-btn:hover {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-}
-
-.order-item-total {
-    font-weight: 600;
-    min-width: 100px;
-    text-align: right;
-}
-
-.remove-item {
-    background: none;
-    border: none;
-    color: #ff6b6b;
-    cursor: pointer;
-    font-size: 1.2rem;
-    margin-left: 1rem;
-    transition: var(--transition);
-}
-
-.remove-item:hover {
-    color: #ff4757;
-}
-
-.order-total {
-    background-color: var(--light-color);
-    padding: 1.2rem;
-    border-radius: var(--border-radius-sm);
-}
-
-.total-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.8rem;
-}
-
-.total-row.total {
-    border-top: 2px solid var(--primary-color);
-    padding-top: 0.8rem;
-    margin-top: 0.8rem;
-    font-size: 1.1rem;
-}
-
-/* Payment Methods */
-.payment-methods {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-@media (max-width: 480px) {
-    .payment-methods {
-        grid-template-columns: 1fr;
-    }
-}
-
-.payment-method {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem 1rem;
-    border: 2px solid var(--light-gray);
-    border-radius: var(--border-radius-sm);
-    cursor: pointer;
-    transition: var(--transition);
-    text-align: center;
-}
-
-.payment-method:hover {
-    border-color: var(--primary-color);
-    transform: translateY(-3px);
-}
-
-.payment-method.active {
-    border-color: var(--primary-color);
-    background-color: rgba(193, 154, 83, 0.1);
-}
-
-.payment-method i {
-    font-size: 2rem;
-    color: var(--primary-color);
-    margin-bottom: 0.8rem;
-}
-
-.payment-method span {
-    font-weight: 600;
-}
-
-/* Payment Details */
-.payment-details {
-    background-color: var(--light-color);
-    padding: 1.5rem;
-    border-radius: var(--border-radius-sm);
-    margin-top: 1rem;
-}
-
-.qris-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: white;
-    padding: 2rem;
-    border-radius: var(--border-radius-sm);
-    border: 2px dashed var(--light-gray);
-}
-
-.qris-placeholder i {
-    font-size: 4rem;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.bank-accounts {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.bank-account {
-    background: white;
-    padding: 1.2rem;
-    border-radius: var(--border-radius-sm);
-    border: 1px solid var(--light-gray);
-}
-
-.bank-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.bank-info i {
-    font-size: 2rem;
-    color: var(--primary-color);
-}
-
-.bank-info h4 {
-    margin: 0 0 0.3rem 0;
-}
-
-.bank-info p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: var(--gray-color);
-}
-
-.cash-info {
-    text-align: center;
-    padding: 2rem;
-}
-
-.cash-info i {
-    font-size: 4rem;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.payment-instruction {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: var(--gray-color);
-    text-align: center;
-    font-style: italic;
-}
-
-/* Confirmation Message */
-.confirmation-message {
-    text-align: center;
-    padding: 2rem;
-}
-
-.confirmation-message i {
-    font-size: 4rem;
-    color: #4CAF50;
-    margin-bottom: 1rem;
-}
-
-.confirmation-message h4 {
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.confirmation-message p {
-    margin-bottom: 0.5rem;
-}
-
-/* Fade In Animation */
-.fade-in {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Utility Classes */
-.text-center { text-align: center; }
-.text-primary { color: var(--primary-color); }
-.mb-1 { margin-bottom: 1rem; }
-.mb-2 { margin-bottom: 2rem; }
-.mb-3 { margin-bottom: 3rem; }
-.mt-1 { margin-top: 1rem; }
-.mt-2 { margin-top: 2rem; }
-.mt-3 { margin-top: 3rem; }
-.d-flex { display: flex; }
-.justify-center { justify-content: center; }
-.align-center { align-items: center; }
-.gap-1 { gap: 1rem; }
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .reservation-container {
-        grid-template-columns: 1fr;
-        gap: 3rem;
+    function showToast(message, type = 'info') {
+        const toastContainer = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} toast-icon"></i>
+            <div class="toast-content">
+                <p class="toast-message">${message}</p>
+            </div>
+            <button class="toast-close">&times;</button>
+        `;
+        
+        toastContainer.appendChild(toast);
+        
+        // Animasi masuk
+        setTimeout(() => {
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateX(0)';
+        }, 10);
+        
+        // Close button event
+        toast.querySelector('.toast-close').addEventListener('click', () => {
+            hideToast(toast);
+        });
+        
+        // Auto remove setelah 5 detik
+        setTimeout(() => {
+            if (toast.parentNode) {
+                hideToast(toast);
+            }
+        }, 5000);
     }
     
-    .reservation-info h2 {
-        text-align: center;
+    function hideToast(toast) {
+        toast.classList.add('hiding');
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 300);
     }
-    
-    .reservation-info h2::after {
-        left: 50%;
-        transform: translateX(-50%);
-    }
-    
-    /* Toast untuk tablet */
-    .toast-container {
-        top: 10px;
-        right: 10px;
-        max-width: 300px;
-    }
-}
 
-@media (max-width: 768px) {
-    .nav-links {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 280px;
-        height: 100vh;
-        background-color: var(--dark-color);
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        transition: var(--transition);
-        z-index: 1000;
-        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-    }
-    
-    .nav-links.active {
-        right: 0;
-    }
-    
-    .mobile-menu-btn {
-        display: block;
-    }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-        gap: 0;
-    }
-    
-    .hero-btns {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .hero-btns .btn {
-        width: 100%;
-        max-width: 300px;
-    }
-    
-    .back-to-top {
-        bottom: 1.5rem;
-        right: 1.5rem;
-        width: 45px;
-        height: 45px;
-    }
-    
-    /* Toast untuk mobile */
-    .toast-container {
-        top: 70px; /* Di bawah header */
-        right: 10px;
-        left: 10px;
-        max-width: 100%;
-        align-items: center;
-    }
-    
-    .toast {
-        width: 100%;
-        max-width: 400px;
-        margin: 0 auto;
-    }
-    
-    .payment-modal-content {
-        margin: 20px;
-        max-height: 85vh;
-    }
-    
-    .cart-floating {
-        bottom: 20px;
-        right: 20px;
-    }
-    
-    .cart-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 1.3rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .menu-categories {
-        gap: 0.5rem;
-    }
-    
-    .category-btn {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.85rem;
-    }
-    
-    .feature-card {
-        padding: 1.5rem;
-    }
-    
-    .gallery-item {
-        height: 220px;
-    }
-    
-    .chef-img {
-        height: 250px;
-    }
-    
-    .payment-modal-body {
-        padding: 1rem;
-    }
-    
-    .payment-modal-footer {
-        flex-direction: column;
-    }
-    
-    .payment-modal-footer .btn {
-        width: 100%;
-    }
-    
-    /* Toast untuk mobile kecil */
-    .toast-container {
-        top: 60px;
-    }
-    
-    .toast {
-        padding: 12px 16px;
-        font-size: 0.9rem;
-    }
-    
-    .toast-icon {
-        font-size: 1.3rem;
-    }
-}
-
-/* Safe area untuk iPhone dengan notch */
-@supports (padding: max(0px)) {
-    .toast-container {
-        top: max(20px, env(safe-area-inset-top));
-        right: max(20px, env(safe-area-inset-right));
-        left: max(20px, env(safe-area-inset-left));
-    }
-    
-    @media (max-width: 768px) {
-        .toast-container {
-            top: max(70px, calc(env(safe-area-inset-top) + 50px));
+    // ================ FUNGSI LOGIN/USER ================
+    function updateUserInterface() {
+        const userAvatar = document.getElementById('userAvatar');
+        const dropdownAvatar = document.getElementById('dropdownAvatar');
+        const dropdownUserName = document.getElementById('dropdownUserName');
+        const dropdownUserEmail = document.getElementById('dropdownUserEmail');
+        const cartFloating = document.getElementById('cartFloating');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const logoutBtnText = document.getElementById('logoutBtnText');
+        const logoutBtnIcon = logoutBtn.querySelector('i');
+        
+        if (currentUser) {
+            // User sudah login
+            const initial = currentUser.name.charAt(0).toUpperCase();
+            userAvatar.textContent = initial;
+            dropdownAvatar.textContent = initial;
+            dropdownUserName.textContent = currentUser.name;
+            dropdownUserEmail.textContent = currentUser.email;
+            
+            // Tampilkan tombol keranjang
+            cartFloating.style.display = 'block';
+            
+            // Tampilkan tombol logout dengan text "Logout"
+            logoutBtn.style.display = 'flex';
+            logoutBtnText.textContent = 'Logout';
+            logoutBtnIcon.className = 'fas fa-sign-out-alt';
+        } else {
+            // User belum login (Guest)
+            userAvatar.textContent = 'G';
+            dropdownAvatar.textContent = 'G';
+            dropdownUserName.textContent = 'Guest';
+            dropdownUserEmail.textContent = 'Silakan login untuk memesan';
+            
+            // Sembunyikan tombol keranjang
+            cartFloating.style.display = 'none';
+            
+            // Tampilkan tombol login dengan text "Login"
+            logoutBtn.style.display = 'flex';
+            logoutBtnText.textContent = 'Login';
+            logoutBtnIcon.className = 'fas fa-sign-in-alt';
         }
         
-        .cart-floating {
-            bottom: max(1.5rem, env(safe-area-inset-bottom));
-            right: max(1.5rem, env(safe-area-inset-right));
+        // Update jumlah item di keranjang
+        updateCartCount();
+    }
+
+    function showLoginModal() {
+        const loginModal = document.getElementById('loginModal');
+        loginModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function hideLoginModal() {
+        const loginModal = document.getElementById('loginModal');
+        loginModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function handleLogin(event) {
+        event.preventDefault();
+        
+        const name = document.getElementById('customerName').value.trim();
+        const phone = document.getElementById('customerPhone').value.trim();
+        const email = document.getElementById('customerEmail').value.trim();
+        
+        if (!name || !phone || !email) {
+            showToast('Harap isi semua field dengan benar', 'error');
+            return;
+        }
+        
+        if (!validateEmail(email)) {
+            showToast('Format email tidak valid', 'error');
+            return;
+        }
+        
+        if (!validatePhone(phone)) {
+            showToast('Format nomor telepon tidak valid', 'error');
+            return;
+        }
+        
+        // Simpan user ke localStorage
+        currentUser = {
+            name: name,
+            phone: phone,
+            email: email,
+            loginTime: new Date().toISOString()
+        };
+        
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        
+        // Update UI
+        updateUserInterface();
+        
+        // Tutup modal
+        hideLoginModal();
+        
+        // Reset form
+        document.getElementById('loginForm').reset();
+        
+        // Show success message
+        showToast(`Selamat datang, ${name}! Anda sekarang dapat memesan menu favorit.`, 'success');
+    }
+
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    function validatePhone(phone) {
+        const re = /^[0-9]{10,13}$/;
+        return re.test(phone);
+    }
+
+    function handleLogout() {
+        if (currentUser) {
+            // Jika user sudah login, lakukan logout
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            updateUserInterface();
+            showToast('Anda telah logout', 'info');
+        } else {
+            // Jika user belum login (guest), tampilkan login modal
+            showLoginModal();
         }
     }
-}
 
-/* Pastikan konten tidak overflow di mobile */
-@media (max-width: 768px) {
-    body {
-        overflow-x: hidden;
-        position: relative;
+    // ================ FUNGSI KERANJANG ================
+    function addToCart(itemId) {
+        if (!currentUser) {
+            showToast('Silakan login terlebih dahulu untuk menambahkan item ke keranjang', 'error');
+            return;
+        }
+        
+        const menuItem = menuItems.find(item => item.id === itemId);
+        if (!menuItem) return;
+        
+        // Cek apakah item sudah ada di keranjang
+        const existingItem = cart.find(item => item.id === itemId);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                ...menuItem,
+                quantity: 1
+            });
+        }
+        
+        // Simpan ke localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Update UI
+        updateCartCount();
+        
+        // Show success message
+        showToast(`${menuItem.name} telah ditambahkan ke keranjang`, 'success');
     }
+
+    function removeFromCart(itemId) {
+        cart = cart.filter(item => item.id !== itemId);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        updateOrderSummary();
+    }
+
+    function updateCartCount() {
+        const cartCount = document.getElementById('cartCount');
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
+        
+        // Tampilkan atau sembunyikan tombol keranjang
+        const cartFloating = document.getElementById('cartFloating');
+        cartFloating.style.display = currentUser && totalItems > 0 ? 'block' : 'none';
+    }
+
+    function updateOrderSummary() {
+        const orderSummary = document.getElementById('orderSummary');
+        const subtotalElement = document.getElementById('subtotal');
+        const taxElement = document.getElementById('tax');
+        const totalAmountElement = document.getElementById('totalAmount');
+        
+        if (cart.length === 0) {
+            orderSummary.innerHTML = '<p style="text-align: center; padding: 2rem; color: var(--gray-color);">Keranjang Anda kosong</p>';
+            subtotalElement.textContent = formatRupiah(0);
+            taxElement.textContent = formatRupiah(0);
+            totalAmountElement.textContent = formatRupiah(0);
+            return;
+        }
+        
+        let subtotal = 0;
+        let html = '';
+        
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+            
+            html += `
+                <div class="order-item" data-id="${item.id}">
+                    <div class="order-item-info">
+                        <div class="order-item-name">${item.name}</div>
+                        <div class="order-item-price">${formatRupiah(item.price)}</div>
+                        <div class="order-item-quantity">
+                            <button class="quantity-btn minus" data-id="${item.id}">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn plus" data-id="${item.id}">+</button>
+                        </div>
+                    </div>
+                    <div class="order-item-total">${formatRupiah(itemTotal)}</div>
+                    <button class="remove-item" data-id="${item.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+        });
+        
+        orderSummary.innerHTML = html;
+        
+        // Hitung pajak 10%
+        const tax = subtotal * 0.1;
+        const total = subtotal + tax;
+        
+        subtotalElement.textContent = formatRupiah(subtotal);
+        taxElement.textContent = formatRupiah(tax);
+        totalAmountElement.textContent = formatRupiah(total);
+        
+        // Tambahkan event listeners untuk tombol quantity
+        document.querySelectorAll('.quantity-btn.plus').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const itemId = parseInt(this.getAttribute('data-id'));
+                const item = cart.find(item => item.id === itemId);
+                if (item) {
+                    item.quantity += 1;
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartCount();
+                    updateOrderSummary();
+                }
+            });
+        });
+        
+        document.querySelectorAll('.quantity-btn.minus').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const itemId = parseInt(this.getAttribute('data-id'));
+                const item = cart.find(item => item.id === itemId);
+                if (item) {
+                    if (item.quantity > 1) {
+                        item.quantity -= 1;
+                    } else {
+                        removeFromCart(itemId);
+                        return;
+                    }
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartCount();
+                    updateOrderSummary();
+                }
+            });
+        });
+        
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const itemId = parseInt(this.getAttribute('data-id'));
+                removeFromCart(itemId);
+            });
+        });
+    }
+
+    // ================ FUNGSI PEMBAYARAN ================
+    function showPaymentModal() {
+        if (!currentUser) {
+            showToast('Silakan login terlebih dahulu untuk melanjutkan pembayaran', 'error');
+            return;
+        }
+        
+        if (cart.length === 0) {
+            showToast('Keranjang Anda kosong. Tambahkan item terlebih dahulu.', 'error');
+            return;
+        }
+        
+        const paymentModal = document.getElementById('paymentModal');
+        paymentModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        // Reset ke step 1
+        currentPaymentStep = 1;
+        updatePaymentSteps();
+        
+        // Update order summary
+        updateOrderSummary();
+        
+        // Generate order code
+        const orderCode = `GH-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`;
+        document.getElementById('orderCode').textContent = orderCode;
+    }
+
+    function hidePaymentModal() {
+        const paymentModal = document.getElementById('paymentModal');
+        paymentModal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    function updatePaymentSteps() {
+        // Sembunyikan semua step
+        document.querySelectorAll('.step').forEach(step => {
+            step.classList.remove('active');
+        });
+        
+        // Tampilkan step aktif
+        document.getElementById(`step${currentPaymentStep}`).classList.add('active');
+        
+        // Update tombol navigasi
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const payNowBtn = document.getElementById('payNowBtn');
+        
+        if (currentPaymentStep === 1) {
+            prevBtn.textContent = 'Balik ke Beranda';
+            prevBtn.onclick = () => {
+                hidePaymentModal();
+                cart = [];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+            };
+            nextBtn.style.display = 'inline-flex';
+            payNowBtn.style.display = 'none';
+        } else if (currentPaymentStep === 2) {
+            prevBtn.textContent = 'Kembali';
+            prevBtn.onclick = () => {
+                currentPaymentStep = 1;
+                updatePaymentSteps();
+            };
+            nextBtn.style.display = 'none';
+            payNowBtn.style.display = 'inline-flex';
+        } else if (currentPaymentStep === 3) {
+            prevBtn.textContent = 'Pesan Lagi';
+            prevBtn.onclick = () => {
+                hidePaymentModal();
+                cart = [];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                showToast('Terima kasih atas pesanan Anda!', 'success');
+            };
+            nextBtn.style.display = 'none';
+            payNowBtn.style.display = 'none';
+        }
+    }
+
+    function setupPaymentMethods() {
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', function() {
+                // Hapus active class dari semua method
+                paymentMethods.forEach(m => m.classList.remove('active'));
+                
+                // Tambah active class ke method yang dipilih
+                this.classList.add('active');
+                
+                // Update payment method yang aktif
+                currentPaymentMethod = this.getAttribute('data-method');
+                
+                // Sembunyikan semua payment details
+                document.querySelectorAll('.payment-details').forEach(detail => {
+                    detail.style.display = 'none';
+                });
+                
+                // Tampilkan payment details yang sesuai
+                document.getElementById(`${currentPaymentMethod}Details`).style.display = 'block';
+            });
+        });
+    }
+
+    function processPayment() {
+        // Simulasi proses pembayaran
+        showToast('Memproses pembayaran...', 'info');
+        
+        setTimeout(() => {
+            currentPaymentStep = 3;
+            updatePaymentSteps();
+            
+            // Kosongkan keranjang setelah pembayaran berhasil
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            showToast('Pembayaran berhasil! Pesanan Anda sedang diproses.', 'success');
+        }, 2000);
+    }
+
+    // ================ FUNGSI RESERVASI ================
+    function handleReservation(event) {
+        event.preventDefault();
+        
+        if (!currentUser) {
+            showToast('Silakan login terlebih dahulu untuk melakukan reservasi', 'error');
+            return;
+        }
+        
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        const email = document.getElementById('email').value;
+        const guests = document.getElementById('guests').value;
+        const date = document.getElementById('date').value;
+        const time = document.getElementById('time').value;
+        const occasion = document.getElementById('occasion').value;
+        const message = document.getElementById('message').value;
+        
+        // Validasi
+        if (!name || !phone || !email || !guests || !date || !time) {
+            showToast('Harap isi semua field yang wajib diisi', 'error');
+            return;
+        }
+        
+        // Buat objek reservasi
+        const reservation = {
+            name,
+            phone,
+            email,
+            guests,
+            date,
+            time,
+            occasion,
+            message,
+            reservationTime: new Date().toISOString(),
+            status: 'pending'
+        };
+        
+        // Simpan ke localStorage (dalam contoh nyata, ini akan dikirim ke server)
+        const reservations = JSON.parse(localStorage.getItem('reservations')) || [];
+        reservations.push(reservation);
+        localStorage.setItem('reservations', JSON.stringify(reservations));
+        
+        // Reset form
+        document.getElementById('reservationForm').reset();
+        
+        // Set tanggal minimum untuk form
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').min = today;
+        
+        // Tampilkan notifikasi sukses
+        showToast(`Reservasi berhasil! Kami akan mengonfirmasi melalui WhatsApp/Email.`, 'success');
+        
+        // Simulasikan pengiriman WhatsApp
+        const whatsappMessage = `Halo, saya ${name} ingin reservasi di Gourmet Haven:
+        Tanggal: ${date}
+        Waktu: ${time}
+        Jumlah Tamu: ${guests}
+        ${occasion ? `Kesempatan: ${occasion}` : ''}
+        ${message ? `Catatan: ${message}` : ''}`;
+        
+        const whatsappUrl = `https://wa.me/6285710680912?text=${encodeURIComponent(whatsappMessage)}`;
+        
+        // Buka WhatsApp di tab baru (opsional)
+        setTimeout(() => {
+            window.open(whatsappUrl, '_blank');
+        }, 1000);
+    }
+
+    // ================ FUNGSI RENDER ================
+    function renderFeatures() {
+        const featuresGrid = document.getElementById('featuresGrid');
+        if (!featuresGrid) return;
+        
+        featuresGrid.innerHTML = features.map(feature => `
+            <div class="feature-card fade-in">
+                <div class="feature-icon">
+                    <i class="${feature.icon}"></i>
+                </div>
+                <h3>${feature.title}</h3>
+                <p>${feature.description}</p>
+            </div>
+        `).join('');
+    }
+
+    function renderMenuCategories() {
+        const menuCategories = document.getElementById('menuCategories');
+        if (!menuCategories) return;
+        
+        const categories = ['all', 'appetizer', 'main-course', 'dessert'];
+        const categoryNames = {
+            'all': 'Semua Menu',
+            'appetizer': 'Appetizer',
+            'main-course': 'Main Course',
+            'dessert': 'Dessert'
+        };
+        
+        menuCategories.innerHTML = categories.map(category => `
+            <button class="category-btn ${category === currentCategory ? 'active' : ''}" 
+                    data-category="${category}">
+                ${categoryNames[category]}
+            </button>
+        `).join('');
+        
+        // Add event listeners untuk category buttons
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                currentCategory = category;
+                
+                // Update active class
+                document.querySelectorAll('.category-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Render menu items berdasarkan kategori
+                renderMenuItems();
+            });
+        });
+    }
+
+    function renderMenuItems() {
+        const menuItemsContainer = document.getElementById('menuItems');
+        if (!menuItemsContainer) return;
+        
+        let filteredItems = menuItems;
+        if (currentCategory !== 'all') {
+            filteredItems = menuItems.filter(item => item.category === currentCategory);
+        }
+        
+        menuItemsContainer.innerHTML = filteredItems.map(item => `
+            <div class="menu-item fade-in">
+                <img src="${item.image}" alt="${item.name}" class="menu-item-img" loading="lazy" onerror="this.src='https://via.placeholder.com/320x220/cccccc/333333?text=${encodeURIComponent(item.name)}'">
+                <div class="menu-item-content">
+                    <div class="menu-item-header">
+                        <h3 class="menu-item-name">${item.name}</h3>
+                        <div class="menu-item-price">${formatRupiah(item.price)}</div>
+                    </div>
+                    <span class="menu-item-category">${item.category === 'appetizer' ? 'Appetizer' : item.category === 'main-course' ? 'Main Course' : 'Dessert'}</span>
+                    <p class="menu-item-desc">${item.description}</p>
+                    <div class="menu-item-footer">
+                        <div class="rating">
+                            ${'★'.repeat(Math.floor(item.rating))}${'☆'.repeat(5-Math.floor(item.rating))}
+                            <span style="color: var(--gray-color); margin-left: 5px;">(${item.rating})</span>
+                        </div>
+                        <button class="btn btn-secondary add-to-cart" data-id="${item.id}">
+                            <i class="fas fa-cart-plus"></i>
+                            Pesan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        // Re-setup scroll animations untuk elemen baru dengan cached observer
+        const fadeElements = document.querySelectorAll('.menu-item.fade-in');
+        
+        // Reuse observer atau buat baru jika belum ada
+        if (!renderObserver) {
+            renderObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+        }
+        
+        fadeElements.forEach(element => {
+            element.classList.remove('visible');
+            renderObserver.observe(element);
+        });
+    }
+
+    function renderChefs() {
+        const chefGrid = document.getElementById('chefGrid');
+        if (!chefGrid) return;
+        
+        chefGrid.innerHTML = chefs.map(chef => `
+            <div class="chef-card fade-in">
+                <img src="${chef.image}" alt="${chef.name}" class="chef-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300/cccccc/333333?text=${encodeURIComponent(chef.name)}'">
+                <div class="chef-info">
+                    <h3>${chef.name}</h3>
+                    <p class="chef-role">${chef.role}</p>
+                    <p>${chef.bio}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderGallery() {
+        const galleryGrid = document.getElementById('galleryGrid');
+        if (!galleryGrid) return;
+        
+        galleryGrid.innerHTML = galleryImages.map((image, index) => `
+            <div class="gallery-item fade-in">
+                <img src="${image}" alt="Gallery Image ${index + 1}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300/cccccc/333333?text=Gourmet+Haven'">
+                <div class="gallery-overlay">
+                    <p>Gourmet Haven Experience</p>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // ================ FUNGSI SCROLL & ANIMASI ================
+    function setupScrollAnimations() {
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+        
+        fadeElements.forEach(element => {
+            observer.observe(element);
+        });
+    }
+
+    function setupScrollHeader() {
+        const header = document.getElementById('header');
+        const backToTop = document.getElementById('backToTop');
+        let ticking = false;
+        let lastScrollY = 0;
+        
+        // Debounce scroll events
+        function updateScroll() {
+            lastScrollY = window.scrollY;
+            
+            // Header scroll effect
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            // Back to top button
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+            
+            // Active navigation link
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+            
+            ticking = false;
+        }
+        
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(updateScroll);
+                ticking = true;
+            }
+        }, { passive: true });
+    }
+
+    // ================ FUNGSI INISIALISASI ================
+    function init() {
+        // Set tanggal minimum untuk form reservasi
+        const today = new Date().toISOString().split('T')[0];
+        const dateInput = document.getElementById('date');
+        if (dateInput) {
+            dateInput.min = today;
+            dateInput.value = today;
+        }
+        
+        // Update current year di footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Render semua konten
+        renderFeatures();
+        renderMenuCategories();
+        renderMenuItems();
+        renderChefs();
+        renderGallery();
+        
+        // Setup user interface
+        updateUserInterface();
+        
+        // Setup event listeners
+        setupEventListeners();
+        
+        // Setup scroll animations
+        setupScrollAnimations();
+        setupScrollHeader();
+        
+        // Setup payment methods
+        setupPaymentMethods();
+    }
+
+    function setupEventListeners() {
+        // Login form
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', handleLogin);
+        }
+        
+        // Logout button
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', handleLogout);
+        }
+        
+        // User profile button
+        const userProfileBtn = document.getElementById('userProfileBtn');
+        if (userProfileBtn) {
+            userProfileBtn.addEventListener('click', function() {
+                const dropdown = document.getElementById('userDropdownMenu');
+                dropdown.classList.toggle('active');
+            });
+            
+            // Close dropdown ketika klik di luar
+            document.addEventListener('click', function(event) {
+                const dropdown = document.getElementById('userDropdownMenu');
+                if (!userProfileBtn.contains(event.target) && !dropdown.contains(event.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
+        }
+        
+        // Mobile menu button
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        if (mobileMenuBtn && navLinks) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                this.querySelector('i').classList.toggle('fa-bars');
+                this.querySelector('i').classList.toggle('fa-times');
+            });
+            
+            // Close mobile menu ketika klik link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    mobileMenuBtn.querySelector('i').classList.remove('fa-times');
+                    mobileMenuBtn.querySelector('i').classList.add('fa-bars');
+                });
+            });
+        }
+        
+        // Close modal ketika klik di luar
+        const loginModal = document.getElementById('loginModal');
+        if (loginModal) {
+            loginModal.addEventListener('click', function(event) {
+                if (event.target === this) {
+                    hideLoginModal();
+                }
+            });
+        }
+        
+        // Close login modal button
+        const loginModalCloseBtn = document.getElementById('loginModalCloseBtn');
+        if (loginModalCloseBtn) {
+            loginModalCloseBtn.addEventListener('click', hideLoginModal);
+        }
+        
+        // Cart button
+        const cartBtn = document.getElementById('cartBtn');
+        if (cartBtn) {
+            cartBtn.addEventListener('click', showPaymentModal);
+        }
+        
+        // Menu items - Event delegation untuk add to cart (dicegah duplicate listener)
+        const menuItemsContainer = document.getElementById('menuItems');
+        if (menuItemsContainer) {
+            menuItemsContainer.addEventListener('click', function(e) {
+                const btn = e.target.closest('.add-to-cart');
+                if (btn) {
+                    const itemId = parseInt(btn.getAttribute('data-id'));
+                    addToCart(itemId);
+                }
+            });
+        }
+        
+        // Payment modal
+        const paymentCloseBtn = document.getElementById('paymentCloseBtn');
+        const paymentModal = document.getElementById('paymentModal');
+        if (paymentCloseBtn) {
+            paymentCloseBtn.addEventListener('click', hidePaymentModal);
+        }
+        if (paymentModal) {
+            paymentModal.addEventListener('click', function(event) {
+                if (event.target === this) {
+                    hidePaymentModal();
+                }
+            });
+        }
+        
+        // Payment navigation buttons
+        const nextBtn = document.getElementById('nextBtn');
+        const payNowBtn = document.getElementById('payNowBtn');
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                if (currentPaymentStep === 1) {
+                    currentPaymentStep = 2;
+                    updatePaymentSteps();
+                }
+            });
+        }
+        
+        if (payNowBtn) {
+            payNowBtn.addEventListener('click', processPayment);
+        }
+        
+        // Reservation form
+        const reservationForm = document.getElementById('reservationForm');
+        if (reservationForm) {
+            reservationForm.addEventListener('submit', handleReservation);
+        }
+        
+        // Newsletter form
+        const newsletterForm = document.getElementById('newsletterForm');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const email = this.querySelector('.newsletter-input').value;
+                if (validateEmail(email)) {
+                    showToast('Terima kasih telah berlangganan newsletter kami!', 'success');
+                    this.reset();
+                } else {
+                    showToast('Masukkan email yang valid', 'error');
+                }
+            });
+        }
+        
+        // Back to top button
+        const backToTop = document.getElementById('backToTop');
+        if (backToTop) {
+            backToTop.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        
+        // Close dropdown modal jika user klik escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                hideLoginModal();
+                hidePaymentModal();
+                const dropdown = document.getElementById('userDropdownMenu');
+                dropdown.classList.remove('active');
+            }
+        });
+    }
+
+    // ================ INISIALISASI APLIKASI ================
+    init();
     
-    .container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
+    // Tambahkan event listener untuk tombol login di halaman (jika ada)
+    document.querySelectorAll('.btn-login-trigger').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showLoginModal();
+        });
+    });
     
-    /* Perbaikan untuk modal di mobile */
-    .payment-modal-content {
-        margin: 0;
-        border-radius: 0;
-        max-height: 100vh;
-        height: 100vh;
+    // Tambahkan tombol cancel di modal login
+    const loginModalContent = document.querySelector('.login-modal-content');
+    if (loginModalContent) {
+        const cancelBtn = document.createElement('button');
+        cancelBtn.type = 'button';
+        cancelBtn.className = 'btn btn-secondary';
+        cancelBtn.innerHTML = '<i class="fas fa-times"></i> Batal';
+        cancelBtn.style.marginTop = '1rem';
+        cancelBtn.style.width = '100%';
+        cancelBtn.addEventListener('click', hideLoginModal);
+        
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.appendChild(cancelBtn);
+        }
     }
-    
-    .payment-modal-body {
-        padding-bottom: 5rem; /* Beri ruang untuk footer */
-    }
-    
-    /* Pastikan tombol tidak menutupi konten */
-    .payment-modal-footer {
-        position: sticky;
-        bottom: 0;
-        background: white;
-        padding: 1rem;
-        border-top: 1px solid var(--light-gray);
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-    }
-}
+});
