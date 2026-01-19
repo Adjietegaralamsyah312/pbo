@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gourmet Haven - Restoran fine dining premium dengan hidangan internasional berkualitas tinggi dan pengalaman kuliner tak terlupakan.">
+    <meta name="theme-color" content="#c19a53">
+    <title>Gourmet Haven - Restoran Fine Dining Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+</head>
+<body>
+    <!-- Container utama untuk aplikasi -->
+    <div id="app">
+        <!-- Toast Notification Container -->
+        <div class="toast-container" id="toastContainer"></div>
+
+        <!-- Login Modal -->
+        <div class="login-modal" id="loginModal">
+            <div class="login-modal-content">
+                <div class="login-modal-header">
+                    <h2><i class="fas fa-user-circle"></i> Selamat Datang</h2>
+                    <button class="login-modal-close" id="loginModalCloseBtn" aria-label="Close login modal">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <p>Silakan masukkan nama Anda untuk memulai memesan</p>
+                </div>
+                <form class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="customerName">Nama Lengkap</label>
+                        <input type="text" id="customerName" placeholder="Contoh: Budi Santoso" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerPhone">Nomor Telepon</label>
+                        <input type="tel" id="customerPhone" placeholder="081234567890" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerEmail">Email</label>
+                        <input type="email" id="customerEmail" placeholder="email@example.com" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        <i class="fas fa-sign-in-alt"></i> Mulai Memesan
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Header & Navigation -->
+        <header id="header">
+            <div class="container nav-container">
+                <a href="#home" class="logo">
+                    <i class="fas fa-utensils logo-icon"></i>
+                    <span>Gourmet Haven</span>
+                </a>
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home" class="nav-link active">Beranda</a></li>
+                    <li><a href="#about" class="nav-link">Tentang</a></li>
+                    <li><a href="#features" class="nav-link">Keunggulan</a></li>
+                    <li><a href="#menu" class="nav-link">Menu</a></li>
+                    <li><a href="#chefs" class="nav-link">Chef</a></li>
+                    <li><a href="#gallery" class="nav-link">Galeri</a></li>
+                    <li><a href="#reservation" class="nav-link">Reservasi</a></li>
+                    <li><a href="#contact" class="nav-link">Kontak</a></li>
+                    <li class="user-menu-container">
+                        <button class="user-profile-btn" id="userProfileBtn">
+                            <div class="user-avatar" id="userAvatar">U</div>
+                        </button>
+                        <div class="user-dropdown-menu" id="userDropdownMenu">
+                            <div class="dropdown-user-info">
+                                <div class="dropdown-avatar" id="dropdownAvatar">U</div>
+                                <div class="dropdown-user-details">
+                                    <p class="dropdown-user-name" id="dropdownUserName">Guest</p>
+                                    <p class="dropdown-user-email" id="dropdownUserEmail">Belum login</p>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span id="logoutBtnText">Login</span>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="fade-in">Pengalaman Kuliner Tak Terlupakan</h1>
+                    <p class="fade-in">Di Gourmet Haven, kami menyajikan hidangan istimewa yang dibuat dengan bahan-bahan terbaik dan sentuhan kreatif dari chef ternama kami. Setiap hidangan adalah karya seni yang memanjakan lidah Anda.</p>
+                    <div class="hero-btns fade-in">
+                        <a href="#menu" class="btn">
+                            <i class="fas fa-book-open"></i>
+                            Lihat Menu Lengkap
+                        </a>
+                        <a href="#reservation" class="btn btn-secondary">
+                            <i class="fas fa-calendar-alt"></i>
+                            Reservasi Sekarang
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about" id="about">
+            <div class="container">
+                <div class="section-title fade-in">
+                    <h2>Tentang Gourmet Haven</h2>
+                    <p>Didirikan pada tahun 2010, kami telah menjadi destinasi kuliner premium dengan reputasi yang tak tertandingi di industri fine dining.</p>
+                </div>
+                
+                <div class="about-content">
+                    <div class="about-text fade-in">
+                        <h3>Kisah Kami</h3>
+                        <p>Gourmet Haven lahir dari passion mendalam terhadap seni kuliner. Chef Marco Alessandro, pendiri kami, membawa pengalaman lebih dari 20 tahun dari restoran bintang Michelin di Eropa.</p>
+                        <p>Setiap hidangan diolah dengan bahan-bahan segar pilihan yang dipasok langsung dari petani lokal terpercaya dan importir khusus. Kami mengutamakan kualitas, keberlanjutan, dan rasa autentik.</p>
+                        <p>Restoran kami telah menerima berbagai penghargaan prestisius termasuk "Best Fine Dining Restaurant 2023" dan "Golden Fork Award" selama tiga tahun berturut-turut.</p>
+                        <a href="#reservation" class="btn mt-2">
+                            <i class="fas fa-star"></i>
+                            Rasakan Keunggulan Kami
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <div class="container">
+                <div class="section-title fade-in">
+                    <h2>Keunggulan Kami</h2>
+                    <p>Mengapa Gourmet Haven menjadi pilihan utama para pecinta kuliner</p>
+                </div>
+                
+                <div class="features-grid" id="featuresGrid">
+                    <!-- Features akan di-generate dengan JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Section -->
+        <section class="menu" id="menu">
+            <div class="container">
+                <div class="section-title fade-in">
+                    <h2>Menu Spesial</h2>
+                    <p>Jelajahi kreasi kuliner terbaik kami yang dibuat dengan passion dan keahlian</p>
+                </div>
+                
+                <div class="menu-categories fade-in" id="menuCategories">
+                    <!-- Categories akan di-generate dengan JavaScript -->
+                </div>
+                
+                <div class="menu-items" id="menuItems">
+                    <!-- Menu items akan di-generate dengan JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Chef Section -->
+        <section class="chef-section" id="chefs">
+            <div class="container">
+                <div class="section-title fade-in">
+                    <h2>Chef Kami</h2>
+                    <p>Bertemu dengan tim chef berbakat yang berada di balik setiap kreasi istimewa</p>
+                </div>
+                
+                <div class="chef-grid" id="chefGrid">
+                    <!-- Chef cards akan di-generate dengan JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section class="gallery" id="gallery">
+            <div class="container">
+                <div class="section-title fade-in">
+                    <h2>Galeri Kami</h2>
+                    <p>Rasakan atmosfer dan keindahan setiap hidangan melalui galeri kami</p>
+                </div>
+                
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Gallery items akan di-generate dengan JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Reservation Section -->
+        <section class="reservation" id="reservation">
+            <div class="container">
+                <div class="reservation-container">
+                    <div class="reservation-info fade-in">
+                        <h2>Reservasi Meja</h2>
+                        <p>Pesan meja Anda sekarang untuk pengalaman kuliner tak terlupakan. Isi formulir di samping dan kami akan mengonfirmasi reservasi Anda dalam waktu 24 jam.</p>
+                        
+                        <div class="reservation-details">
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h4>Jam Operasional</h4>
+                                    <p>Setiap Hari: 18:00 - 23:00<br>Minggu: 12:00 - 23:00</p>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h4>Telepon</h4>
+                                    <p>(021) 555-7890<br>WhatsApp: 0812-3456-7890</p>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h4>Lokasi</h4>
+                                    <p>Jl. Gourmet No. 123, Jakarta Selatan<br>Parkir valet tersedia</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="reservation-form fade-in">
+                        <form id="reservationForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">Nama Lengkap *</label>
+                                    <input type="text" id="name" required placeholder="Masukkan nama lengkap">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Nomor Telepon *</label>
+                                    <input type="tel" id="phone" required placeholder="Contoh: 081234567890">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">Email *</label>
+                                    <input type="email" id="email" required placeholder="nama@email.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="guests">Jumlah Tamu *</label>
+                                    <select id="guests" required>
+                                        <option value="">Pilih jumlah tamu</option>
+                                        <option value="1">1 Orang</option>
+                                        <option value="2">2 Orang</option>
+                                        <option value="3-4">3-4 Orang</option>
+                                        <option value="5-6">5-6 Orang</option>
+                                        <option value="7+">7+ Orang (Group)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="date">Tanggal Reservasi *</label>
+                                    <input type="date" id="date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="time">Waktu Reservasi *</label>
+                                    <select id="time" required>
+                                        <option value="">Pilih waktu</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="19:30">19:30</option>
+                                        <option value="20:00">20:00</option>
+                                        <option value="20:30">20:30</option>
+                                        <option value="21:00">21:00</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="occasion">Kesempatan Khusus</label>
+                                <select id="occasion">
+                                    <option value="">Pilih kesempatan (opsional)</option>
+                                    <option value="anniversary">Anniversary</option>
+                                    <option value="birthday">Ulang Tahun</option>
+                                    <option value="business">Makan Bisnis</option>
+                                    <option value="date">Kencan</option>
+                                    <option value="family">Keluarga</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">Pesan Tambahan</label>
+                                <textarea id="message" placeholder="Permintaan khusus, alergi makanan, atau perayaan khusus..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn" id="submitBtn" style="width: 100%;">
+                                <i class="fas fa-paper-plane"></i>
+                                Kirim Reservasi
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer id="contact">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-column">
+                        <h3>Gourmet Haven</h3>
+                        <p>Restoran fine dining dengan sentuhan modern yang menawarkan pengalaman kuliner tak terlupakan dengan bahan-bahan terbaik dan pelayanan premium.</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link" aria-label="TripAdvisor"><i class="fab fa-tripadvisor"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Kontak Kami</h3>
+                        <ul class="footer-links">
+                            <li>
+                                <a href="#" class="contact-link">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Jl. Gourmet No. 123, Jakarta Selatan
+                                </a>
+                            </li>
+                            <li>
+                                <a href="tel:+62215557890" class="contact-link">
+                                    <i class="fas fa-phone"></i>
+                                    (021) 555-7890
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:info@gourmethaven.com" class="contact-link">
+                                    <i class="fas fa-envelope"></i>
+                                    info@gourmethaven.com
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="contact-link">
+                                    <i class="fas fa-clock"></i>
+                                    Buka setiap hari 18:00 - 23:00
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Link Cepat</h3>
+                        <ul class="footer-links">
+                            <li><a href="#home" class="footer-link"><i class="fas fa-chevron-right"></i> Beranda</a></li>
+                            <li><a href="#about" class="footer-link"><i class="fas fa-chevron-right"></i> Tentang Kami</a></li>
+                            <li><a href="#menu" class="footer-link"><i class="fas fa-chevron-right"></i> Menu</a></li>
+                            <li><a href="#chefs" class="footer-link"><i class="fas fa-chevron-right"></i> Chef Kami</a></li>
+                            <li><a href="#reservation" class="footer-link"><i class="fas fa-chevron-right"></i> Reservasi</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Newsletter</h3>
+                        <p>Berlangganan newsletter kami untuk mendapatkan penawaran khusus dan informasi menu terbaru.</p>
+                        <form class="newsletter-form" id="newsletterForm">
+                            <input type="email" class="newsletter-input" placeholder="Email Anda" required>
+                            <button type="submit" class="btn" style="width: 100%;">
+                                <i class="fas fa-paper-plane"></i>
+                                Berlangganan
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="copyright">
+                    <p>&copy; <span id="currentYear">2023</span> Gourmet Haven. Hak Cipta Dilindungi. | Website by <span class="text-primary">Tim Gourmet</span></p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Back to Top Button -->
+        <a href="#home" class="back-to-top" id="backToTop" aria-label="Back to top">
+            <i class="fas fa-chevron-up"></i>
+        </a>
+
+        <!-- Payment Modal -->
+        <div class="payment-modal" id="paymentModal">
+            <div class="payment-modal-content">
+                <div class="payment-modal-header">
+                    <h2><i class="fas fa-credit-card"></i> Pembayaran</h2>
+                    <button class="payment-close-btn" id="paymentCloseBtn">&times;</button>
+                </div>
+                <div class="payment-modal-body">
+                    <div class="payment-steps">
+                        <div class="step active" id="step1">
+                            <h3>1. Ringkasan Pesanan</h3>
+                            <div class="order-summary" id="orderSummary">
+                                <!-- Order items akan diisi dengan JavaScript -->
+                            </div>
+                            <div class="order-total">
+                                <div class="total-row">
+                                    <span>Subtotal</span>
+                                    <span id="subtotal">Rp 0</span>
+                                </div>
+                                <div class="total-row">
+                                    <span>Pajak (10%)</span>
+                                    <span id="tax">Rp 0</span>
+                                </div>
+                                <div class="total-row total">
+                                    <span><strong>Total Pembayaran</strong></span>
+                                    <span id="totalAmount"><strong>Rp 0</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="step" id="step2">
+                            <h3>2. Pilih Metode Pembayaran</h3>
+                            <div class="payment-methods">
+                                <div class="payment-method active" data-method="qris">
+                                    <i class="fas fa-qrcode"></i>
+                                    <span>QRIS</span>
+                                </div>
+                                <div class="payment-method" data-method="transfer">
+                                    <i class="fas fa-university"></i>
+                                    <span>Transfer Bank</span>
+                                </div>
+                                <div class="payment-method" data-method="cash">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>Tunai di Tempat</span>
+                                </div>
+                                <div class="payment-method" data-method="card">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>Kartu Kredit/Debit</span>
+                                </div>
+                            </div>
+                            
+                            <!-- QRIS Section -->
+                            <div class="payment-details" id="qrisDetails">
+                                <div class="qris-code">
+                                    <div class="qris-placeholder">
+                                        <i class="fas fa-qrcode"></i>
+                                        <p>Scan QR Code untuk pembayaran</p>
+                                    </div>
+                                </div>
+                                <p class="payment-instruction">Scan QR code di atas menggunakan aplikasi e-wallet atau mobile banking yang mendukung QRIS</p>
+                            </div>
+                            
+                            <!-- Transfer Bank Section -->
+                            <div class="payment-details" id="transferDetails" style="display: none;">
+                                <div class="bank-accounts">
+                                    <div class="bank-account">
+                                        <div class="bank-info">
+                                            <i class="fas fa-university"></i>
+                                            <div>
+                                                <h4>BCA</h4>
+                                                <p>1234567890</p>
+                                                <p>Gourmet Haven Restaurant</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bank-account">
+                                        <div class="bank-info">
+                                            <i class="fas fa-university"></i>
+                                            <div>
+                                                <h4>Mandiri</h4>
+                                                <p>0987654321</p>
+                                                <p>Gourmet Haven Restaurant</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="payment-instruction">Transfer ke salah satu rekening di atas dan upload bukti transfer di langkah berikutnya</p>
+                            </div>
+                            
+                            <!-- Cash Section -->
+                            <div class="payment-details" id="cashDetails" style="display: none;">
+                                <div class="cash-info">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <p>Bayar secara tunai saat Anda datang ke restoran.</p>
+                                    <p>Pastikan membawa uang pas untuk kenyamanan transaksi.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Card Section -->
+                            <div class="payment-details" id="cardDetails" style="display: none;">
+                                <form id="cardForm">
+                                    <div class="form-group">
+                                        <label for="cardNumber">Nomor Kartu</label>
+                                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="expiryDate">Masa Berlaku</label>
+                                            <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cvv">CVV</label>
+                                            <input type="password" id="cvv" placeholder="123" maxlength="3">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cardName">Nama di Kartu</label>
+                                        <input type="text" id="cardName" placeholder="Nama Lengkap">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="step" id="step3">
+                            <h3>3. Konfirmasi Pembayaran</h3>
+                            <div class="confirmation-message">
+                                <i class="fas fa-check-circle"></i>
+                                <h4>Pesanan Anda Telah Diterima!</h4>
+                                <p>Kode pemesanan: <strong id="orderCode">GH-2023-001</strong></p>
+                                <p>Estimasi waktu penyiapan: <strong>30-45 menit</strong></p>
+                                <p>Silakan datang ke restoran untuk mengambil pesanan atau tunggu konfirmasi untuk pesanan takeaway.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-modal-footer">
+                    <button class="btn btn-secondary" id="prevBtn">Balik ke Beranda</button>
+                    <button class="btn" id="nextBtn">Lanjut</button>
+                    <button class="btn" id="payNowBtn" style="display: none;">
+                        <i class="fas fa-lock"></i>
+                        Bayar Sekarang
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shopping Cart Floating Button -->
+        <div class="cart-floating" id="cartFloating">
+            <button class="cart-btn" id="cartBtn">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
